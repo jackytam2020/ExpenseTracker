@@ -6,6 +6,8 @@ import path from 'path';
 //exported functions
 import { connectDB } from './config/database.ts';
 
+//route imports
+import entryRoutes from './routes/entries.ts';
 import User from './models/Users.ts';
 
 const app = express();
@@ -14,6 +16,9 @@ app.use(cors());
 dotenv.config({ path: path.resolve(__dirname, './.env') });
 
 const port = process.env.PORT || 3000;
+
+//routes
+app.use('/entries', entryRoutes);
 
 app.post('/', async (req, res) => {
   try {
