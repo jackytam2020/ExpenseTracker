@@ -4,6 +4,7 @@ import { Request, Response } from 'express';
 
 export const addEntries = async (req: Request, res: Response) => {
   try {
+    const { userID, month, year } = req.params;
     const entries = req.body;
 
     for (const entryData of entries) {
@@ -17,9 +18,18 @@ export const addEntries = async (req: Request, res: Response) => {
 
       await entry.save();
     }
-    res
-      .status(201)
-      .json({ message: 'Entries added to the database successfully.' });
+
+    //return the updated array of entries after adding as a response
+    const updatedEntries = await Entry.find({
+      userID,
+      $expr: {
+        $and: [
+          { $eq: [{ $month: '$createdAt' }, month] },
+          { $eq: [{ $year: '$createdAt' }, year] },
+        ],
+      },
+    });
+    res.status(201).json(updatedEntries);
   } catch (err) {
     res.status(500).json({ message: err });
   }
