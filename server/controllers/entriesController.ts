@@ -8,12 +8,13 @@ export const addEntries = async (req: Request, res: Response) => {
     const entries = req.body;
 
     for (const entryData of entries) {
-      const { userID, description, category } = entryData;
+      const { userID, description, category, amount } = entryData;
 
       const entry = new Entry({
         userID,
         description,
         category,
+        amount,
       });
 
       await entry.save();
@@ -88,18 +89,20 @@ interface UpdateFields {
   description?: string;
   category?: string;
   date?: Date;
+  amount?: Number;
 }
 
 export const editEntry = async (req: Request, res: Response) => {
   try {
     const { entryID } = req.params;
-    const { newDescription, newCategory, newDate } = req.body;
+    const { newDescription, newCategory, newDate, newAmount } = req.body;
 
     const updateFields: UpdateFields = {};
 
     if (newDescription) updateFields.description = newDescription;
     if (newCategory) updateFields.category = newCategory;
     if (newDate) updateFields.date = newDate;
+    if (newAmount) updateFields.amount = newAmount;
 
     const result = await Entry.updateOne(
       { _id: entryID },
