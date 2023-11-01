@@ -26,6 +26,10 @@ select {
   font: inherit;
 }
 
+input:focus {
+  outline: none;
+}
+
 html {
   display: flex;
   flex-direction: column;

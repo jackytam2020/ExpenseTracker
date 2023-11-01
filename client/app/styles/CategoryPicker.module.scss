@@ -15,6 +15,11 @@
     padding: 1rem 0 1rem 0.5rem;
   }
 
+  &__dropDownModal {
+    @extend .categoryPicker__dropDown;
+    width: 50%;
+  }
+
   &__arrowIcon {
     cursor: pointer;
   }

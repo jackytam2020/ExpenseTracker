@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import HomeStyles from './styles/Home.module.scss';
 
 import Toolbar from './components/Toolbar';
@@ -6,6 +5,7 @@ import EntryTable from './components/EntryTable';
 import CategoryChart from './components/CategoryChart';
 import MonthlyChart from './components/MonthlyChart';
 import YearlyCategoryChart from './components/YearlyCategoryChart';
+import AddModal from './components/modals/AddModal';
 
 export default function Home() {
   return (

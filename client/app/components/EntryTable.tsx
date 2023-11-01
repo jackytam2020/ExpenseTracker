@@ -2,34 +2,47 @@ import React from 'react';
 import EntryRow from '../atoms/EntryRow';
 import EntryTableStyles from '../styles/EntryTable.module.scss';
 
-export default function EntryTable() {
+interface entryType {
+  date: string;
+  description: string;
+  category: string;
+  income?: number;
+  debits?: number;
+}
+
+export default function EntryTable({
+  modalEntries,
+  handleRowDelete,
+  entryArr,
+  setEntryArr,
+}: {
+  modalEntries?: entryType[];
+  handleRowDelete: (index: number) => void;
+  entryArr?: entryType[];
+}) {
   const data = [
     {
       date: '2023-10-30',
       description: 'Item 1',
-      category: 'Category A',
-      income: 100,
+      category: 'Car',
       debits: 50,
     },
     {
       date: '2023-10-30',
       description: 'Item 1',
-      category: 'Category A',
-      income: 100,
+      category: 'Food',
       debits: 50,
     },
     {
       date: '2023-10-30',
       description: 'Item 1',
-      category: 'Category A',
+      category: 'Income',
       income: 100,
-      debits: 50,
     },
     {
       date: '2023-10-30',
       description: 'Item 1',
-      category: 'Category A',
-      income: 100,
+      category: 'Food',
       debits: 50,
     },
     // Add more data entries as needed
@@ -46,9 +59,20 @@ export default function EntryTable() {
         </tr>
       </thead>
       <tbody>
-        {data.map((entry, index) => (
-          <EntryRow key={index} {...entry} />
-        ))}
+        {modalEntries
+          ? modalEntries.map((entry, index) => (
+              <EntryRow
+                key={index}
+                {...entry}
+                index={index}
+                handleRowDelete={handleRowDelete}
+                entryArr={entryArr}
+                setEntryArr={setEntryArr}
+              />
+            ))
+          : data.map((entry, index) => (
+              <EntryRow key={index} index={index} {...entry} />
+            ))}
       </tbody>
     </table>
   );

@@ -1,0 +1,45 @@
+.addEntryRow {
+  width: 400px;
+  height: 100%;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    p {
+      font-size: 2rem;
+    }
+  }
+
+  &__closeIcon {
+    font-size: 2rem;
+    cursor: pointer;
+  }
+
+  &__inputsContainer {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
+  }
+
+  &__inputsLabel {
+    color: #6f6969;
+  }
+
+  &__inputsContainer {
+    margin-top: 2rem;
+  }
+
+  &__descInput {
+    width: 100%;
+    height: 2rem;
+    border-radius: 5px;
+    border: 1px solid #d8d8d8;
+  }
+
+  &__amountInput {
+    @extend .addEntryRow__descInput;
+    width: 50%;
+  }
+}
