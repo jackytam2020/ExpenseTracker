@@ -80,30 +80,39 @@ export const getEntriesByYear = async (req: Request, res: Response) => {
 interface UpdateFields {
   description?: string;
   category?: string;
-  date?: Date;
-  amount?: Number;
+  date?: string;
+  income?: number;
+  debits?: number;
 }
 
 export const editEntry = async (req: Request, res: Response) => {
   try {
-    const { entryID } = req.params;
-    const { newDescription, newCategory, newDate, newAmount } = req.body;
+    const { userID, entryID, month, year } = req.params;
+    const { newDescription, newCategory, newDate, newIncome, newDebit } =
+      req.body;
 
     const updateFields: UpdateFields = {};
 
     if (newDescription) updateFields.description = newDescription;
     if (newCategory) updateFields.category = newCategory;
     if (newDate) updateFields.date = newDate;
-    if (newAmount) updateFields.amount = newAmount;
+    if (newIncome) updateFields.income = newIncome;
+    if (newDebit) updateFields.debits = newDebit;
+
+    if (newCategory === 'Income') updateFields.debits = 0;
+    if (newCategory !== 'Income') updateFields.income = 0;
 
     const result = await Entry.updateOne(
       { _id: entryID },
       { $set: updateFields }
     );
 
-    const updatedEntry = await Entry.findById(entryID);
+    const updatedEntries = await Entry.find({
+      userID,
+      date: { $regex: `^${year}-${month}` },
+    });
 
-    res.status(200).json(updatedEntry);
+    res.status(200).json(updatedEntries);
   } catch (err) {
     res.status(500).json({ message: err });
   }

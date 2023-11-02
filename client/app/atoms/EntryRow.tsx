@@ -10,6 +10,7 @@ import EditModal from '../components/modals/EditModal';
 import { entryType, modalEntryType } from '../utils/interfaces';
 
 export default function EntryRow({
+  _id,
   date,
   description,
   category,
@@ -19,7 +20,9 @@ export default function EntryRow({
   index,
   entryArr,
   setEntryArr,
+  editEntry,
 }: {
+  _id?: string;
   index: number;
   date: string;
   description: string;
@@ -29,10 +32,16 @@ export default function EntryRow({
   handleRowDelete?: (index: number) => void;
   entryArr?: modalEntryType[] | undefined;
   setEntryArr?: React.Dispatch<React.SetStateAction<modalEntryType[]>>;
+  editEntry?: (entryType: entryType) => void;
 }) {
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   return (
-    <tr className={EntryRowStyles.row}>
+    <tr
+      className={EntryRowStyles.row}
+      onClick={() => {
+        console.log(description, category);
+      }}
+    >
       <td className={EntryRowStyles.row__data}>{date}</td>
       <td className={EntryRowStyles.row__data}> {description}</td>
       <td className={EntryRowStyles.row__data}>{category}</td>
@@ -59,6 +68,7 @@ export default function EntryRow({
       <EditModal
         isEditModalOpen={isEditModalOpen}
         setIsEditModalOpen={setIsEditModalOpen}
+        entryId={_id}
         description={description}
         category={category}
         income={income}
@@ -67,6 +77,7 @@ export default function EntryRow({
         index={index}
         entryArr={entryArr ? entryArr : null}
         setEntryArr={setEntryArr ? setEntryArr : null}
+        editEntry={editEntry}
       />
     </tr>
   );

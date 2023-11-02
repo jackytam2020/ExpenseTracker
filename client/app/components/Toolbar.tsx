@@ -9,10 +9,15 @@ import AddModal from './modals/AddModal';
 import ToolbarStyles from '../styles/Toolbar.module.scss';
 import AddIcon from '@mui/icons-material/Add';
 
+//Types
+import { modalEntryType } from '../utils/interfaces';
+
 export default function Toolbar({
   getEntriesByMonth,
+  addEntries,
 }: {
   getEntriesByMonth: () => void;
+  addEntries: ([]: modalEntryType[]) => void;
 }) {
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
 
@@ -38,6 +43,7 @@ export default function Toolbar({
       <AddModal
         isAddModalOpen={isAddModalOpen}
         setIsAddModalOpen={setIsAddModalOpen}
+        addEntries={addEntries}
       />
     </div>
   );

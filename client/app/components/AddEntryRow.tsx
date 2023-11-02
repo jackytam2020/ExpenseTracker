@@ -10,13 +10,8 @@ import { useWizard } from 'react-use-wizard';
 import CloseIcon from '@mui/icons-material/Close';
 import dayjs from 'dayjs';
 
-interface entryType {
-  date: string;
-  description: string;
-  category: string;
-  income?: number;
-  debits?: number;
-}
+//Types
+import { modalEntryType } from '../utils/interfaces';
 
 export default function AddEntryRow({
   step,
@@ -27,12 +22,13 @@ export default function AddEntryRow({
 }: {
   step: number;
   setStep: React.Dispatch<React.SetStateAction<number>>;
-  setEntryArr: React.Dispatch<React.SetStateAction<entryType[]>>;
-  entryArr: entryType[];
+  setEntryArr: React.Dispatch<React.SetStateAction<modalEntryType[]>>;
+  entryArr: modalEntryType[];
   setIsAddModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const { previousStep } = useWizard();
-  const [entryObj, setEntryObj] = useState<entryType>({
+  const [entryObj, setEntryObj] = useState<modalEntryType>({
+    userID: 1,
     date: dayjs().format('YYYY-MM-DD'),
     description: '',
     category: '',

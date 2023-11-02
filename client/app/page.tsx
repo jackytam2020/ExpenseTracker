@@ -13,7 +13,7 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 
 //Types
-import { entryType } from './utils/interfaces';
+import { entryType, modalEntryType } from './utils/interfaces';
 
 export default function Home() {
   const [data, setData] = useState<entryType[]>();
@@ -26,12 +26,49 @@ export default function Home() {
       const res = await axios.get(
         `http://localhost:8080/entries/1/${monthSelector}/${currentYear}/getEntriesByMonth`
       );
-      console.log(res.data);
       setData(res.data);
     } catch (error) {
       // Handle the error here
       console.error('Error:', error);
       setData([]);
+    }
+  }
+
+  async function editEntry(editedEntryObj: entryType) {
+    const [year, month] = editedEntryObj.date.split('-');
+
+    console.log(editedEntryObj.date);
+    try {
+      const res = await axios.patch(
+        `http://localhost:8080/entries/${editedEntryObj._id}/1/${month}/${year}/editEntry`,
+        {
+          newDescription: editedEntryObj.description,
+          newCategory: editedEntryObj.category,
+          newDate: editedEntryObj.date,
+          newIncome: editedEntryObj.income,
+          newDebit: editedEntryObj.debits,
+        }
+      );
+      getEntriesByMonth();
+    } catch (error) {
+      // Handle the error here
+      console.error('Error:', error);
+    }
+  }
+
+  async function addEntries(entryArr: modalEntryType[]) {
+    const currentMonth = dayjs().month() + 1;
+    const currentYear = dayjs().year();
+
+    try {
+      const res = await axios.post(
+        `http://localhost:8080/entries/1/${currentMonth}/${currentYear}/addEntry`,
+        entryArr
+      );
+      setData(res.data);
+    } catch (error) {
+      // Handle the error here
+      console.error('Error:', error);
     }
   }
 
@@ -42,8 +79,11 @@ export default function Home() {
   return (
     <main className={HomeStyles.main}>
       <div className={HomeStyles.main__left}>
-        <Toolbar getEntriesByMonth={getEntriesByMonth} />
-        {data && <EntryTable data={data} />}
+        <Toolbar
+          getEntriesByMonth={getEntriesByMonth}
+          addEntries={addEntries}
+        />
+        {data && <EntryTable data={data} editEntry={editEntry} />}
       </div>
       <div className={HomeStyles.main__right}>
         <CategoryChart />

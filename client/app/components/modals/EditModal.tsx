@@ -21,6 +21,8 @@ export default function EditModal({
   entryArr,
   index,
   setEntryArr,
+  editEntry,
+  entryId,
 }: {
   isEditModalOpen: boolean;
   setIsEditModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -32,8 +34,23 @@ export default function EditModal({
   entryArr?: modalEntryType[] | null;
   index: number;
   setEntryArr: React.Dispatch<React.SetStateAction<modalEntryType[]>> | null;
+  editEntry?: (entryObj: entryType) => void;
+  entryId?: string;
 }) {
-  const [entryObj, setEntryObj] = useState<modalEntryType>({
+  //ensure edit modal has the current values of selected row to be edited
+  useEffect(() => {
+    setEntryObj({
+      _id: entryId,
+      description: description,
+      date: date,
+      category: category,
+      income: income,
+      debits: debits,
+    });
+  }, [isEditModalOpen, entryId, date, description, category, income, debits]);
+
+  const [entryObj, setEntryObj] = useState<entryType | modalEntryType>({
+    _id: entryId,
     date: date,
     description: description,
     category: category,
@@ -69,6 +86,11 @@ export default function EditModal({
         newArray[index] = entryObj;
         return newArray;
       });
+    }
+
+    //invoke edit entry endpoint when editing from homepage
+    if (editEntry) {
+      editEntry(entryObj as entryType);
     }
   };
 

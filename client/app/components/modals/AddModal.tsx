@@ -14,9 +14,11 @@ import { modalEntryType } from '../../utils/interfaces';
 export default function AddModal({
   isAddModalOpen,
   setIsAddModalOpen,
+  addEntries,
 }: {
   isAddModalOpen: boolean;
   setIsAddModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  addEntries: ([]: modalEntryType[]) => void;
 }) {
   const [step, setStep] = useState<number>(0);
   const [entryArr, setEntryArr] = useState<modalEntryType[]>([]);
@@ -42,6 +44,7 @@ export default function AddModal({
               setEntryArr={setEntryArr}
               setIsAddModalOpen={setIsAddModalOpen}
               handleRowDelete={handleRowDelete}
+              addEntries={addEntries}
             />
             <AddEntryRow
               step={step}
