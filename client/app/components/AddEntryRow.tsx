@@ -152,7 +152,7 @@ export default function AddEntryRow({
           setStep(1);
           setEntryArr([...entryArr, entryObj]);
         }}
-        disabled={isDisabled ? true : false}
+        // disabled={isDisabled ? true : false}
       >
         Add Entry
       </button>

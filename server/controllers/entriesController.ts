@@ -8,13 +8,15 @@ export const addEntries = async (req: Request, res: Response) => {
     const entries = req.body;
 
     for (const entryData of entries) {
-      const { userID, description, category, amount } = entryData;
+      const { userID, description, category, date, income, debits } = entryData;
 
       const entry = new Entry({
         userID,
         description,
         category,
-        amount,
+        date,
+        income,
+        debits,
       });
 
       await entry.save();
@@ -23,12 +25,7 @@ export const addEntries = async (req: Request, res: Response) => {
     //return the updated array of entries after adding as a response
     const updatedEntries = await Entry.find({
       userID,
-      $expr: {
-        $and: [
-          { $eq: [{ $month: '$createdAt' }, month] },
-          { $eq: [{ $year: '$createdAt' }, year] },
-        ],
-      },
+      date: { $regex: `^${year}-${month}` },
     });
     res.status(201).json(updatedEntries);
   } catch (err) {
@@ -42,12 +39,7 @@ export const getEntriesByMonth = async (req: Request, res: Response) => {
 
     const entries = await Entry.find({
       userID,
-      $expr: {
-        $and: [
-          { $eq: [{ $month: '$createdAt' }, month] },
-          { $eq: [{ $year: '$createdAt' }, year] },
-        ],
-      },
+      date: { $regex: `^${year}-${month}` },
     });
 
     if (entries.length === 0) {

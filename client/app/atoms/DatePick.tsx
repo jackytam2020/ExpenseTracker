@@ -4,13 +4,12 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
-import { UrlWithStringQuery } from 'url';
 
 export default function DatePick({
   handleDateChange,
   selectedDate,
 }: {
-  handleDateChange: (date: UrlWithStringQuery) => void;
+  handleDateChange: (date: string) => void;
   selectedDate?: string;
 }) {
   const [currentDate, setCurrentDate] = useState(
@@ -22,7 +21,7 @@ export default function DatePick({
         value={dayjs(currentDate)}
         onChange={(newValue) => {
           if (newValue) {
-            const formattedDate = dayjs(newValue as Date).format('YYYY/MM/DD');
+            const formattedDate = dayjs(newValue).format('YYYY/MM/DD');
             handleDateChange(formattedDate);
           }
         }}

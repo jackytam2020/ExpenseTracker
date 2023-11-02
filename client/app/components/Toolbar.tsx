@@ -9,7 +9,11 @@ import AddModal from './modals/AddModal';
 import ToolbarStyles from '../styles/Toolbar.module.scss';
 import AddIcon from '@mui/icons-material/Add';
 
-export default function Toolbar() {
+export default function Toolbar({
+  getEntriesByMonth,
+}: {
+  getEntriesByMonth: () => void;
+}) {
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
 
   return (
@@ -23,7 +27,7 @@ export default function Toolbar() {
         ></AddIcon>
       </div>
       <div className={ToolbarStyles.toolbar__item}>
-        <MonthPicker />
+        <MonthPicker getEntriesByMonth={getEntriesByMonth} />
       </div>
       <div className={ToolbarStyles.toolbar__item}>
         <CategoryPicker />

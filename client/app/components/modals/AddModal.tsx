@@ -8,13 +8,8 @@ import Modal from '@mui/material/Modal';
 import AddEntries from '../AddEntries';
 import AddEntryRow from '../AddEntryRow';
 
-interface entryType {
-  date: string;
-  description: string;
-  category: string;
-  income?: number;
-  debits?: number;
-}
+//Types
+import { modalEntryType } from '../../utils/interfaces';
 
 export default function AddModal({
   isAddModalOpen,
@@ -24,7 +19,7 @@ export default function AddModal({
   setIsAddModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const [step, setStep] = useState<number>(0);
-  const [entryArr, setEntryArr] = useState<entryType[]>([]);
+  const [entryArr, setEntryArr] = useState<modalEntryType[]>([]);
 
   const handleRowDelete = (index: number) => {
     const updatedEntryArr = entryArr.filter((_, i) => i !== index);

@@ -1,19 +1,13 @@
 'use client';
 import React, { useState } from 'react';
 import EntryRowStyles from '../styles/EntryRow.module.scss';
-
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import EditModal from '../components/modals/EditModal';
 
-interface entryType {
-  date: string;
-  description: string;
-  category: string;
-  income?: number;
-  debits?: number;
-}
+//types
+import { entryType, modalEntryType } from '../utils/interfaces';
 
 export default function EntryRow({
   date,
@@ -27,13 +21,14 @@ export default function EntryRow({
   setEntryArr,
 }: {
   index: number;
-  date: Date;
+  date: string;
   description: string;
   category: string;
   income?: number;
   debits?: number;
   handleRowDelete?: (index: number) => void;
-  entryArr?: entryType[] | undefined;
+  entryArr?: modalEntryType[] | undefined;
+  setEntryArr?: React.Dispatch<React.SetStateAction<modalEntryType[]>>;
 }) {
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   return (
@@ -70,8 +65,8 @@ export default function EntryRow({
         debits={debits}
         date={date}
         index={index}
-        entryArr={entryArr ? entryArr : undefined}
-        setEntryArr={setEntryArr}
+        entryArr={entryArr ? entryArr : null}
+        setEntryArr={setEntryArr ? setEntryArr : null}
       />
     </tr>
   );

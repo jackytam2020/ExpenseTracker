@@ -2,12 +2,17 @@
 
 import React, { useState, useEffect } from 'react';
 import MonthPickerStyles from '../styles/MonthPicker.module.scss';
+import dayjs from 'dayjs';
 
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 
-export default function MonthPicker() {
-  const [inputValue, setInputValue] = useState<number>(1);
+export default function MonthPicker({
+  getEntriesByMonth,
+}: {
+  getEntriesByMonth: (inputValue: number) => void;
+}) {
+  const [inputValue, setInputValue] = useState<number>(dayjs().month() + 1);
 
   useEffect(() => {
     if (inputValue === 0) {
@@ -15,7 +20,9 @@ export default function MonthPicker() {
     } else if (inputValue === 13) {
       setInputValue(12);
     }
+    getEntriesByMonth(inputValue);
   }, [inputValue]);
+
   return (
     <div className={MonthPickerStyles.monthPicker}>
       <p>month</p>

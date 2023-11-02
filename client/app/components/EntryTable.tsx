@@ -2,51 +2,22 @@ import React from 'react';
 import EntryRow from '../atoms/EntryRow';
 import EntryTableStyles from '../styles/EntryTable.module.scss';
 
-interface entryType {
-  date: string;
-  description: string;
-  category: string;
-  income?: number;
-  debits?: number;
-}
+//types
+import { entryType, modalEntryType } from '../utils/interfaces';
 
 export default function EntryTable({
   modalEntries,
   handleRowDelete,
   entryArr,
   setEntryArr,
+  data,
 }: {
-  modalEntries?: entryType[];
-  handleRowDelete: (index: number) => void;
-  entryArr?: entryType[];
+  modalEntries?: modalEntryType[];
+  handleRowDelete?: (index: number) => void;
+  entryArr?: modalEntryType[];
+  data?: entryType[];
+  setEntryArr?: React.Dispatch<React.SetStateAction<modalEntryType[]>>;
 }) {
-  const data = [
-    {
-      date: '2023-10-30',
-      description: 'Item 1',
-      category: 'Car',
-      debits: 50,
-    },
-    {
-      date: '2023-10-30',
-      description: 'Item 1',
-      category: 'Food',
-      debits: 50,
-    },
-    {
-      date: '2023-10-30',
-      description: 'Item 1',
-      category: 'Income',
-      income: 100,
-    },
-    {
-      date: '2023-10-30',
-      description: 'Item 1',
-      category: 'Food',
-      debits: 50,
-    },
-    // Add more data entries as needed
-  ];
   return (
     <table className={EntryTableStyles.table}>
       <thead className={EntryTableStyles.table__header}>
@@ -59,7 +30,7 @@ export default function EntryTable({
         </tr>
       </thead>
       <tbody>
-        {modalEntries
+        {modalEntries && setEntryArr
           ? modalEntries.map((entry, index) => (
               <EntryRow
                 key={index}
@@ -70,7 +41,8 @@ export default function EntryTable({
                 setEntryArr={setEntryArr}
               />
             ))
-          : data.map((entry, index) => (
+          : data &&
+            data.map((entry, index) => (
               <EntryRow key={index} index={index} {...entry} />
             ))}
       </tbody>

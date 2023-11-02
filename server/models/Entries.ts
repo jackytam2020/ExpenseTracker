@@ -10,9 +10,17 @@ const EntrySchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    amount: {
-      type: Number,
+    date: {
+      type: String,
       required: true,
+    },
+    income: {
+      type: Number,
+      required: false,
+    },
+    debits: {
+      type: Number,
+      required: false,
     },
     category: {
       type: String,

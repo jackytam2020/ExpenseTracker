@@ -7,13 +7,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import CategoryPicker from '@/app/atoms/CategoryPicker';
 import DatePick from '@/app/atoms/DatePick';
 
-interface entryType {
-  date: Date;
-  description: string;
-  category: string;
-  income?: number;
-  debits?: number;
-}
+//types
+import { entryType, modalEntryType } from '../../utils/interfaces';
 
 export default function EditModal({
   isEditModalOpen,
@@ -33,11 +28,12 @@ export default function EditModal({
   category: string;
   income?: number;
   debits?: number;
-  date: Date;
-  entryArr?: entryType[] | undefined;
+  date: string;
+  entryArr?: modalEntryType[] | null;
   index: number;
+  setEntryArr: React.Dispatch<React.SetStateAction<modalEntryType[]>> | null;
 }) {
-  const [entryObj, setEntryObj] = useState<entryType>({
+  const [entryObj, setEntryObj] = useState<modalEntryType>({
     date: date,
     description: description,
     category: category,
@@ -62,13 +58,13 @@ export default function EditModal({
     }
   };
 
-  const handleDateChange = (date: Date) => {
+  const handleDateChange = (date: string) => {
     setEntryObj({ ...entryObj, date: date });
   };
 
   const submitEntryEdit = () => {
-    if (entryArr) {
-      setEntryArr((prevEntryArr: entryType[]) => {
+    if (entryArr && setEntryArr) {
+      setEntryArr((prevEntryArr: modalEntryType[]) => {
         const newArray = [...prevEntryArr];
         newArray[index] = entryObj;
         return newArray;
