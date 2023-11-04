@@ -17,7 +17,7 @@ export default function Toolbar({
   addEntries,
 }: {
   getEntriesByMonth: () => void;
-  addEntries: ([]: modalEntryType[]) => void;
+  addEntries: ([]: modalEntryType[], selectedMonth: number) => void;
 }) {
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
 

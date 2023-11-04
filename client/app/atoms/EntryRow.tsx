@@ -5,6 +5,7 @@ import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import EditModal from '../components/modals/EditModal';
+import DeleteModal from '../components/modals/DeleteModal';
 
 //types
 import { entryType, modalEntryType } from '../utils/interfaces';
@@ -21,6 +22,7 @@ export default function EntryRow({
   entryArr,
   setEntryArr,
   editEntry,
+  deleteEntry,
 }: {
   _id?: string;
   index: number;
@@ -32,16 +34,13 @@ export default function EntryRow({
   handleRowDelete?: (index: number) => void;
   entryArr?: modalEntryType[] | undefined;
   setEntryArr?: React.Dispatch<React.SetStateAction<modalEntryType[]>>;
-  editEntry?: (entryType: entryType) => void;
+  editEntry?: (entryType: entryType, selectedMonth: number) => void;
+  deleteEntry?: (entryID: string, selectedMonth: number) => void;
 }) {
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   return (
-    <tr
-      className={EntryRowStyles.row}
-      onClick={() => {
-        console.log(description, category);
-      }}
-    >
+    <tr className={EntryRowStyles.row}>
       <td className={EntryRowStyles.row__data}>{date}</td>
       <td className={EntryRowStyles.row__data}> {description}</td>
       <td className={EntryRowStyles.row__data}>{category}</td>
@@ -62,6 +61,9 @@ export default function EntryRow({
           className={EntryRowStyles.row__deleteIcon}
           onClick={() => {
             if (handleRowDelete) handleRowDelete(index);
+            else {
+              setIsDeleteModalOpen(true);
+            }
           }}
         ></DeleteIcon>
       </td>
@@ -79,6 +81,18 @@ export default function EntryRow({
         setEntryArr={setEntryArr ? setEntryArr : null}
         editEntry={editEntry}
       />
+      {deleteEntry && _id && (
+        <DeleteModal
+          isDeleteModalOpen={isDeleteModalOpen}
+          setIsDeleteModalOpen={setIsDeleteModalOpen}
+          date={date}
+          entryId={_id}
+          income={income}
+          debits={debits}
+          description={description}
+          deleteEntry={deleteEntry}
+        />
+      )}
     </tr>
   );
 }

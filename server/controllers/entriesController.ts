@@ -131,12 +131,7 @@ export const deleteEntry = async (req: Request, res: Response) => {
     //return updated entries in the current month and year as a response
     const updatedEntries = await Entry.find({
       userID,
-      $expr: {
-        $and: [
-          { $eq: [{ $month: '$createdAt' }, month] },
-          { $eq: [{ $year: '$createdAt' }, year] },
-        ],
-      },
+      date: { $regex: `^${year}-${month}` },
     });
 
     res.status(200).json(updatedEntries);

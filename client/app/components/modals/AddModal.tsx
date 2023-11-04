@@ -18,7 +18,7 @@ export default function AddModal({
 }: {
   isAddModalOpen: boolean;
   setIsAddModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  addEntries: ([]: modalEntryType[]) => void;
+  addEntries: ([]: modalEntryType[], selectedMonth: number) => void;
 }) {
   const [step, setStep] = useState<number>(0);
   const [entryArr, setEntryArr] = useState<modalEntryType[]>([]);

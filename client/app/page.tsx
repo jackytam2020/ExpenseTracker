@@ -15,8 +15,12 @@ import dayjs from 'dayjs';
 //Types
 import { entryType, modalEntryType } from './utils/interfaces';
 
+//redux functions
+import { useSelector } from 'react-redux';
+
 export default function Home() {
   const [data, setData] = useState<entryType[]>();
+  const globalStates = useSelector((state) => state);
 
   async function getEntriesByMonth(adjustedMonth?: number) {
     try {
@@ -34,13 +38,12 @@ export default function Home() {
     }
   }
 
-  async function editEntry(editedEntryObj: entryType) {
-    const [year, month] = editedEntryObj.date.split('-');
+  async function editEntry(editedEntryObj: entryType, selectedMonth: number) {
+    const currentYear = dayjs().year();
 
-    console.log(editedEntryObj.date);
     try {
       const res = await axios.patch(
-        `http://localhost:8080/entries/${editedEntryObj._id}/1/${month}/${year}/editEntry`,
+        `http://localhost:8080/entries/${editedEntryObj._id}/1/${selectedMonth}/${currentYear}/editEntry`,
         {
           newDescription: editedEntryObj.description,
           newCategory: editedEntryObj.category,
@@ -49,21 +52,34 @@ export default function Home() {
           newDebit: editedEntryObj.debits,
         }
       );
-      getEntriesByMonth();
+      setData(res.data);
     } catch (error) {
       // Handle the error here
       console.error('Error:', error);
     }
   }
 
-  async function addEntries(entryArr: modalEntryType[]) {
-    const currentMonth = dayjs().month() + 1;
+  async function addEntries(entryArr: modalEntryType[], selectedMonth: number) {
     const currentYear = dayjs().year();
 
     try {
       const res = await axios.post(
-        `http://localhost:8080/entries/1/${currentMonth}/${currentYear}/addEntry`,
+        `http://localhost:8080/entries/1/${selectedMonth}/${currentYear}/addEntry`,
         entryArr
+      );
+      setData(res.data);
+    } catch (error) {
+      // Handle the error here
+      console.error('Error:', error);
+    }
+  }
+
+  async function deleteEntry(entryID: string, selectedMonth: number) {
+    const currentYear = dayjs().year();
+
+    try {
+      const res = await axios.delete(
+        `http://localhost:8080/entries/${entryID}/1/${selectedMonth}/${currentYear}/deleteEntry`
       );
       setData(res.data);
     } catch (error) {
@@ -83,7 +99,13 @@ export default function Home() {
           getEntriesByMonth={getEntriesByMonth}
           addEntries={addEntries}
         />
-        {data && <EntryTable data={data} editEntry={editEntry} />}
+        {data && (
+          <EntryTable
+            data={data}
+            editEntry={editEntry}
+            deleteEntry={deleteEntry}
+          />
+        )}
       </div>
       <div className={HomeStyles.main__right}>
         <CategoryChart />

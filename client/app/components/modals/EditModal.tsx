@@ -8,7 +8,10 @@ import CategoryPicker from '@/app/atoms/CategoryPicker';
 import DatePick from '@/app/atoms/DatePick';
 
 //types
-import { entryType, modalEntryType } from '../../utils/interfaces';
+import { entryType, modalEntryType, globalType } from '../../utils/interfaces';
+
+//redux functions
+import { useSelector } from 'react-redux';
 
 export default function EditModal({
   isEditModalOpen,
@@ -34,7 +37,7 @@ export default function EditModal({
   entryArr?: modalEntryType[] | null;
   index: number;
   setEntryArr: React.Dispatch<React.SetStateAction<modalEntryType[]>> | null;
-  editEntry?: (entryObj: entryType) => void;
+  editEntry?: (entryObj: entryType, monthState: number) => void;
   entryId?: string;
 }) {
   //ensure edit modal has the current values of selected row to be edited
@@ -58,12 +61,28 @@ export default function EditModal({
     debits: debits,
   });
 
+  const monthState = useSelector((state: globalType) => state.selectedMonth);
+
   const handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEntryObj({ ...entryObj, description: e.target.value });
   };
 
   const handleCategoryChange = (category: string) => {
-    setEntryObj({ ...entryObj, category: category });
+    if (category === 'Income') {
+      setEntryObj({
+        ...entryObj,
+        category: category,
+        income: entryObj.debits,
+        debits: 0,
+      });
+    } else {
+      setEntryObj({
+        ...entryObj,
+        category: category,
+        debits: entryObj.income,
+        income: 0,
+      });
+    }
   };
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -90,7 +109,7 @@ export default function EditModal({
 
     //invoke edit entry endpoint when editing from homepage
     if (editEntry) {
-      editEntry(entryObj as entryType);
+      editEntry(entryObj as entryType, monthState);
     }
   };
 

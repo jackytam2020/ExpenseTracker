@@ -15,3 +15,8 @@ export interface modalEntryType {
   income?: number;
   debits?: number;
 }
+
+export interface globalType {
+  selectedMonth: number;
+  selectedYear: number;
+}
