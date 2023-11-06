@@ -37,12 +37,12 @@ export default function MonthPicker({
     <div className={MonthPickerStyles.monthPicker}>
       <p>month</p>
       <div className={MonthPickerStyles.monthPicker__inputHolder}>
-        <AddIcon
-          className={MonthPickerStyles.monthPicker__inputAdd}
+        <RemoveIcon
+          className={MonthPickerStyles.monthPicker__inputRemove}
           onClick={() => {
-            setInputValue(inputValue + 1);
+            setInputValue(inputValue - 1);
           }}
-        ></AddIcon>
+        ></RemoveIcon>
         <input
           type="number"
           value={inputValue}
@@ -51,12 +51,12 @@ export default function MonthPicker({
           readOnly
           className={MonthPickerStyles.monthPicker__input}
         ></input>
-        <RemoveIcon
-          className={MonthPickerStyles.monthPicker__inputRemove}
+        <AddIcon
+          className={MonthPickerStyles.monthPicker__inputAdd}
           onClick={() => {
-            setInputValue(inputValue - 1);
+            setInputValue(inputValue + 1);
           }}
-        ></RemoveIcon>
+        ></AddIcon>
       </div>
     </div>
   );

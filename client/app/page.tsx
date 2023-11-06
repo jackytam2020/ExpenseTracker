@@ -18,6 +18,25 @@ import { entryType, modalEntryType } from './utils/interfaces';
 //redux functions
 import { useSelector } from 'react-redux';
 
+import { Chart } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+import {
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+} from 'chart.js';
+
+Chart.register(
+  ChartDataLabels,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip
+);
+
 export default function Home() {
   const [data, setData] = useState<entryType[]>();
   const globalStates = useSelector((state) => state);
@@ -108,7 +127,7 @@ export default function Home() {
         )}
       </div>
       <div className={HomeStyles.main__right}>
-        <CategoryChart />
+        {data && <CategoryChart entries={data} />}
         <MonthlyChart />
         <YearlyCategoryChart />
       </div>

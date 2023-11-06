@@ -8,6 +8,7 @@ import { connectDB } from './config/database.ts';
 
 //route imports
 import entryRoutes from './routes/entries.ts';
+import chartDataRoutes from './routes/chartData.ts';
 import User from './models/Users.ts';
 
 const app = express();
@@ -19,6 +20,7 @@ const port = process.env.PORT || 3000;
 
 //routes
 app.use('/entries', entryRoutes);
+app.use('/chartData', chartDataRoutes);
 
 app.post('/', async (req, res) => {
   try {
