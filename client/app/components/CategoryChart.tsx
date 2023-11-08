@@ -4,14 +4,7 @@ import CategoryChartStyles from '../styles/CategoryChart.module.scss';
 
 import axios from 'axios';
 import dayjs from 'dayjs';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-} from 'chart.js';
+
 import { Bar } from 'react-chartjs-2';
 
 //redux functions
@@ -20,9 +13,20 @@ import { useSelector } from 'react-redux';
 //Types
 import { entryType, globalType } from '../utils/interfaces';
 
+type categoryType = {
+  [key: string]: number;
+  Income: number;
+  Gas: number;
+  Car: number;
+  Utilities: number;
+  Investments: number;
+  Entertainment: number;
+  Food: number;
+};
+
 export default function CategoryChart({ entries }: { entries: entryType[] }) {
   const monthState = useSelector((state: globalType) => state.selectedMonth);
-  const [_data, setData] = useState({
+  const [data, setData] = useState<categoryType>({
     Income: 0,
     Gas: 0,
     Car: 0,
@@ -35,13 +39,19 @@ export default function CategoryChart({ entries }: { entries: entryType[] }) {
   async function getCategoryExpenses() {
     const currentYear = dayjs().year();
 
+    let selectedMonth: number | string = monthState;
+
+    if (monthState < 10) {
+      selectedMonth = '0' + monthState.toString();
+    }
+
     try {
       const res = await axios.get(
-        `http://localhost:8080/chartData/1/${monthState}/${currentYear}/getCategoryExpenses`
+        `http://localhost:8080/chartData/1/${selectedMonth}/${currentYear}/getCategoryExpenses`
       );
 
       const dataArr = res.data;
-      for (const category in _data) {
+      for (const category in data) {
         for (let i = 0; i < dataArr.length; i++) {
           if (dataArr[i]._id === category) {
             setData((prevData) => ({
@@ -59,7 +69,22 @@ export default function CategoryChart({ entries }: { entries: entryType[] }) {
 
   useEffect(() => {
     getCategoryExpenses();
+    calculateTotalSpend();
   }, [monthState, entries]);
+
+  useEffect(() => {
+    //revert datasets to initial before calling the api every time the month changes
+    setData({
+      Income: 0,
+      Gas: 0,
+      Car: 0,
+      Utilities: 0,
+      Investments: 0,
+      Entertainment: 0,
+      Food: 0,
+    });
+    getCategoryExpenses();
+  }, [monthState]);
 
   const labels = [
     'Income',
@@ -80,15 +105,18 @@ export default function CategoryChart({ entries }: { entries: entryType[] }) {
       },
       datalabels: {
         color: 'black',
+        formatter: function (value: number) {
+          return value.toFixed(2);
+        },
       },
     },
   };
 
-  const data = {
+  const expenses = {
     labels,
     datasets: [
       {
-        data: Object.values(_data),
+        data: Object.values(data),
         backgroundColor: [
           'rgba(255, 99, 132, 0.5)',
           'rgba(75, 192, 192, 0.5)',
@@ -102,14 +130,18 @@ export default function CategoryChart({ entries }: { entries: entryType[] }) {
     ],
   };
 
+  const calculateTotalSpend = () => {
+    const result = Object.keys(data)
+      .filter((key) => key !== 'Income')
+      .reduce((total, category) => (total += data[category]), 0)
+      .toFixed(2);
+    return result;
+  };
+
   return (
-    <div
-      className={CategoryChartStyles.categoryChart}
-      onClick={() => {
-        console.log(_data);
-      }}
-    >
-      <Bar options={options} data={data} />
+    <div className={CategoryChartStyles.categoryChart}>
+      <Bar options={options} data={expenses} />
+      <h3>{`Total Expenditure for this Month: $${calculateTotalSpend()}`}</h3>
     </div>
   );
 }

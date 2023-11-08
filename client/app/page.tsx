@@ -1,5 +1,4 @@
 'use client';
-
 import React, { useState, useEffect } from 'react';
 import HomeStyles from './styles/Home.module.scss';
 
@@ -18,7 +17,6 @@ import { entryType, modalEntryType } from './utils/interfaces';
 //redux functions
 import { useSelector } from 'react-redux';
 
-import { Chart } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {
   CategoryScale,
@@ -26,6 +24,9 @@ import {
   BarElement,
   Title,
   Tooltip,
+  Chart,
+  PointElement,
+  LineElement,
 } from 'chart.js';
 
 Chart.register(
@@ -34,17 +35,24 @@ Chart.register(
   LinearScale,
   BarElement,
   Title,
-  Tooltip
+  Tooltip,
+  LineElement,
+  PointElement
 );
 
 export default function Home() {
   const [data, setData] = useState<entryType[]>();
   const globalStates = useSelector((state) => state);
 
-  async function getEntriesByMonth(adjustedMonth?: number) {
+  async function getEntriesByMonth(adjustedMonth?: number | string) {
     try {
       const currentMonth = dayjs().month() + 1;
       const currentYear = dayjs().year();
+
+      if (adjustedMonth && (adjustedMonth as number) < 10) {
+        adjustedMonth = '0' + adjustedMonth.toString();
+      }
+
       const monthSelector = adjustedMonth ? adjustedMonth : currentMonth;
       const res = await axios.get(
         `http://localhost:8080/entries/1/${monthSelector}/${currentYear}/getEntriesByMonth`
@@ -57,8 +65,15 @@ export default function Home() {
     }
   }
 
-  async function editEntry(editedEntryObj: entryType, selectedMonth: number) {
+  async function editEntry(
+    editedEntryObj: entryType,
+    selectedMonth: number | string
+  ) {
     const currentYear = dayjs().year();
+
+    if ((selectedMonth as number) < 10) {
+      selectedMonth = '0' + selectedMonth.toString();
+    }
 
     try {
       const res = await axios.patch(
@@ -71,6 +86,7 @@ export default function Home() {
           newDebit: editedEntryObj.debits,
         }
       );
+      console.log(res.data);
       setData(res.data);
     } catch (error) {
       // Handle the error here
@@ -78,8 +94,15 @@ export default function Home() {
     }
   }
 
-  async function addEntries(entryArr: modalEntryType[], selectedMonth: number) {
+  async function addEntries(
+    entryArr: modalEntryType[],
+    selectedMonth: number | string
+  ) {
     const currentYear = dayjs().year();
+
+    if ((selectedMonth as number) < 10) {
+      selectedMonth = '0' + selectedMonth.toString();
+    }
 
     try {
       const res = await axios.post(
@@ -93,8 +116,12 @@ export default function Home() {
     }
   }
 
-  async function deleteEntry(entryID: string, selectedMonth: number) {
+  async function deleteEntry(entryID: string, selectedMonth: number | string) {
     const currentYear = dayjs().year();
+
+    if ((selectedMonth as number) < 10) {
+      selectedMonth = '0' + selectedMonth.toString();
+    }
 
     try {
       const res = await axios.delete(
@@ -126,11 +153,13 @@ export default function Home() {
           />
         )}
       </div>
-      <div className={HomeStyles.main__right}>
-        {data && <CategoryChart entries={data} />}
-        <MonthlyChart />
-        <YearlyCategoryChart />
-      </div>
+      {data && (
+        <div className={HomeStyles.main__right}>
+          <CategoryChart entries={data} />
+          <MonthlyChart entries={data} />
+          <YearlyCategoryChart entries={data} />
+        </div>
+      )}
     </main>
   );
 }

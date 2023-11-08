@@ -60,8 +60,6 @@ export default function AddEntryRow({
 
   const isValidEntry = () => {
     const { category, description, income, debits } = entryObj;
-    console.log(description, income, debits);
-
     if (category === 'income') {
       // Validate for the 'Income' category
       if (description !== '' && income !== 0) {
