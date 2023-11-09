@@ -8,6 +8,11 @@
   align-items: center;
   cursor: pointer;
   color: white;
+
+  &__linkedText {
+    color: white;
+    text-decoration: none;
+  }
 }
 
 .cancelButton {

@@ -6,10 +6,12 @@ export default function Button({
   text,
   type,
   onClick,
+  linkedButton,
 }: {
   text: string;
   type?: string;
   onClick?: () => void;
+  linkedButton?: string;
 }) {
   const [buttonStyle, setButtonStyle] = useState(ButtonStyles.button);
 
@@ -29,7 +31,13 @@ export default function Button({
         }
       }}
     >
-      <p className={ButtonStyles.button__text}>{text}</p>
+      {linkedButton ? (
+        <a className={ButtonStyles.button__linkedText} href={linkedButton}>
+          {text}
+        </a>
+      ) : (
+        <p className={ButtonStyles.button__text}>{text}</p>
+      )}
     </div>
   );
 }

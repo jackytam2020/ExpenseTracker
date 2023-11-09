@@ -134,7 +134,21 @@ export default function Home() {
     }
   }
 
+  async function grabUser() {
+    try {
+      const res = await axios.get('http://localhost:8080/auth/profile', {
+        withCredentials: true,
+      });
+
+      console.log(res.data);
+    } catch (error) {
+      // Handle the error here
+      console.error('Error:', error);
+    }
+  }
+
   useEffect(() => {
+    grabUser();
     getEntriesByMonth();
   }, []);
 
