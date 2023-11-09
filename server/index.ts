@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import passport from 'passport';
 import expressSession from 'express-session';
+import { Request, Response } from 'express';
 
 //exported functions
 import { connectDB } from './config/database.ts';

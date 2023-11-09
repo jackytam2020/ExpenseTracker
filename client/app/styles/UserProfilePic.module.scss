@@ -1,13 +1,15 @@
 .container {
   height: 42px;
   width: 42px;
-  border-radius: 50%;
-  background-color: #b01717;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 
   &__user {
     color: white;
+  }
+
+  &__userImage {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 50%;
   }
 }

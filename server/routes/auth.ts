@@ -17,11 +17,11 @@ router.get(
 router.get(
   '/redirect/google',
   passport.authenticate('google', {
-    failureRedirect: `http://localhost:3000/login`,
+    failureRedirect: `http://localhost:3000/`,
   }),
   (_req, res) => {
     // Successful authentication, redirect to client-side application
-    res.redirect('http://localhost:3000/');
+    res.redirect('http://localhost:3000/home');
   }
 );
 
@@ -41,7 +41,7 @@ router.get('/logout', function (req, res, next) {
     if (err) {
       return next(err);
     }
-    res.redirect(`http://localhost:3000/login`);
+    res.redirect(`http://localhost:3000/`);
   });
 });
 
