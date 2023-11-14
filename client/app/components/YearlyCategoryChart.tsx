@@ -7,7 +7,10 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 
 //Types
-import { entryType } from '../utils/interfaces';
+import { entryType, globalType } from '../utils/interfaces';
+
+//redux functions
+import { useSelector } from 'react-redux';
 
 type categoryType = {
   [key: string]: number;
@@ -37,11 +40,14 @@ export default function YearlyCategoryChart({
   const [selectedYear, setSelectedYear] = useState<number | string>(
     dayjs().year()
   );
+  const globalStates = useSelector((state: globalType) => state);
 
   async function getYearlyCategorySpend() {
     try {
+      const currentUser = globalStates.user.googleId;
+
       const res = await axios.get(
-        `http://localhost:8080/chartData/1/${selectedYear}/getYearlyCategorySpend`
+        `http://localhost:8080/chartData/${currentUser}/${selectedYear}/getYearlyCategorySpend`
       );
       const dataArr = res.data;
       for (const category in data) {

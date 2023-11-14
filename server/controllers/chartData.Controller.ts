@@ -6,9 +6,11 @@ export const getCategoryExpenses = async (req: Request, res: Response) => {
     const { userID, month, year } = req.params;
     const startDate = `${year}-${month}-01`;
     const endDate = `${year}-${month}-31`;
+
     const result = await Entry.aggregate([
       {
         $match: {
+          userID: userID,
           date: { $gte: startDate, $lte: endDate },
         },
       },
@@ -31,9 +33,11 @@ export const getMonthlySpend = async (req: Request, res: Response) => {
     const { userID, year } = req.params;
     const startDate = `${year}-01-01`;
     const endDate = `${year}-12-31`;
+
     const result = await Entry.aggregate([
       {
         $match: {
+          userID: userID,
           date: { $gte: startDate, $lte: endDate },
         },
       },
@@ -60,6 +64,7 @@ export const getYearlyCategorySpend = async (req: Request, res: Response) => {
     const result = await Entry.aggregate([
       {
         $match: {
+          userID: userID,
           date: { $gte: startDate, $lte: endDate },
         },
       },

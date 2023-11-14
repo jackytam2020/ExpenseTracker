@@ -7,6 +7,7 @@ export default function UserProfilePic({ src }: { src: string }) {
       <img
         className={ProfileStyles.container__userImage}
         src={src}
+        referrerPolicy="no-referrer"
         alt={'User-Profile-Pic'}
       />
     </div>

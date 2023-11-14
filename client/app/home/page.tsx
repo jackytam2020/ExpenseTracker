@@ -53,6 +53,7 @@ export default function Home() {
     try {
       const currentMonth = dayjs().month() + 1;
       const currentYear = dayjs().year();
+      const currentUser = globalStates.user.googleId;
 
       if (adjustedMonth && (adjustedMonth as number) < 10) {
         adjustedMonth = '0' + adjustedMonth.toString();
@@ -60,7 +61,7 @@ export default function Home() {
 
       const monthSelector = adjustedMonth ? adjustedMonth : currentMonth;
       const res = await axios.get(
-        `http://localhost:8080/entries/1/${monthSelector}/${currentYear}/getEntriesByMonth`
+        `http://localhost:8080/entries/${currentUser}/${monthSelector}/${currentYear}/getEntriesByMonth`
       );
       setData(res.data);
     } catch (error) {
@@ -75,6 +76,7 @@ export default function Home() {
     selectedMonth: number | string
   ) {
     const currentYear = dayjs().year();
+    const currentUser = globalStates.user.googleId;
 
     if ((selectedMonth as number) < 10) {
       selectedMonth = '0' + selectedMonth.toString();
@@ -82,7 +84,7 @@ export default function Home() {
 
     try {
       const res = await axios.patch(
-        `http://localhost:8080/entries/${editedEntryObj._id}/1/${selectedMonth}/${currentYear}/editEntry`,
+        `http://localhost:8080/entries/${editedEntryObj._id}/${currentUser}/${selectedMonth}/${currentYear}/editEntry`,
         {
           newDescription: editedEntryObj.description,
           newCategory: editedEntryObj.category,
@@ -91,7 +93,6 @@ export default function Home() {
           newDebit: editedEntryObj.debits,
         }
       );
-      console.log(res.data);
       setData(res.data);
     } catch (error) {
       // Handle the error here
@@ -104,6 +105,7 @@ export default function Home() {
     selectedMonth: number | string
   ) {
     const currentYear = dayjs().year();
+    const currentUser = globalStates.user.googleId;
 
     if ((selectedMonth as number) < 10) {
       selectedMonth = '0' + selectedMonth.toString();
@@ -111,7 +113,7 @@ export default function Home() {
 
     try {
       const res = await axios.post(
-        `http://localhost:8080/entries/1/${selectedMonth}/${currentYear}/addEntry`,
+        `http://localhost:8080/entries/${currentUser}/${selectedMonth}/${currentYear}/addEntry`,
         entryArr
       );
       setData(res.data);
@@ -123,6 +125,7 @@ export default function Home() {
 
   async function deleteEntry(entryID: string, selectedMonth: number | string) {
     const currentYear = dayjs().year();
+    const currentUser = globalStates.user.googleId;
 
     if ((selectedMonth as number) < 10) {
       selectedMonth = '0' + selectedMonth.toString();
@@ -130,7 +133,7 @@ export default function Home() {
 
     try {
       const res = await axios.delete(
-        `http://localhost:8080/entries/${entryID}/1/${selectedMonth}/${currentYear}/deleteEntry`
+        `http://localhost:8080/entries/${entryID}/${currentUser}/${selectedMonth}/${currentYear}/deleteEntry`
       );
       setData(res.data);
     } catch (error) {
@@ -145,7 +148,7 @@ export default function Home() {
         withCredentials: true,
       });
       //if a user object is returned, authorize them to the application and assign the user to the redux object
-      dispatch(setAuthorized(res.data));
+      await dispatch(setAuthorized(res.data));
     } catch (error) {
       // Handle the error here
       console.error('Error:', error);
@@ -157,15 +160,10 @@ export default function Home() {
   useEffect(() => {
     grabUser();
     getEntriesByMonth();
-  }, []);
+  }, [globalStates.user.googleId]);
 
   return (
-    <main
-      className={HomeStyles.main}
-      onClick={() => {
-        console.log(globalStates);
-      }}
-    >
+    <main className={HomeStyles.main}>
       <div className={HomeStyles.main__left}>
         <Toolbar
           getEntriesByMonth={getEntriesByMonth}
