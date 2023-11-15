@@ -27,7 +27,7 @@ export const addEntries = async (req: Request, res: Response) => {
       userID,
       date: { $regex: `^${year}-${month}` },
     })
-      .sort({ date: -1 }) // Sort by date in descending order (most recent first)
+      .sort({ date: -1, createdAt: -1 }) // Sort by date in descending order (most recent first)
       .exec();
 
     res.status(201).json(updatedEntries);
@@ -44,7 +44,7 @@ export const getEntriesByMonth = async (req: Request, res: Response) => {
       userID,
       date: { $regex: `^${year}-${month}` },
     })
-      .sort({ date: -1 }) // Sort by date in descending order (most recent first)
+      .sort({ date: -1, createdAt: -1 })
       .exec();
 
     if (entries.length === 0) {
@@ -113,7 +113,7 @@ export const editEntry = async (req: Request, res: Response) => {
       userID,
       date: { $regex: `^${year}-${month}` },
     })
-      .sort({ date: -1 }) // Sort by date in descending order (most recent first)
+      .sort({ date: -1, createdAt: -1 })
       .exec();
 
     res.status(200).json(updatedEntries);
@@ -137,7 +137,7 @@ export const deleteEntry = async (req: Request, res: Response) => {
       userID,
       date: { $regex: `^${year}-${month}` },
     })
-      .sort({ date: -1 }) // Sort by date in descending order (most recent first)
+      .sort({ date: -1, createdAt: -1 })
       .exec();
 
     res.status(200).json(updatedEntries);
