@@ -179,14 +179,16 @@ export default function EditModal({
             />
           </div>
         </div>
-        <button
-          onClick={() => {
-            submitEntryEdit();
-            setIsEditModalOpen(false);
-          }}
-        >
-          Edit Entry
-        </button>
+        <div className={EditModalStyles.editModal__actionButton}>
+          <button
+            onClick={() => {
+              submitEntryEdit();
+              setIsEditModalOpen(false);
+            }}
+          >
+            Edit Entry
+          </button>
+        </div>
       </div>
     </Modal>
   );

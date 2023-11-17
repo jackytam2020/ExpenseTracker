@@ -140,24 +140,27 @@ export default function AddEntryRow({
           <DatePick handleDateChange={handleDateChange} />
         </div>
       </div>
-      <button
-        onClick={() => {
-          previousStep();
-          setStep(1);
-        }}
-      >
-        Back
-      </button>
-      <button
-        onClick={() => {
-          previousStep();
-          setStep(1);
-          setEntryArr([...entryArr, entryObj]);
-        }}
-        // disabled={isDisabled ? true : false}
-      >
-        Add Entry
-      </button>
+
+      <div className={AddEntryRowStyles.addEntryRow__actionButtons}>
+        <button
+          onClick={() => {
+            previousStep();
+            setStep(1);
+          }}
+        >
+          Back
+        </button>
+        <button
+          onClick={() => {
+            previousStep();
+            setStep(1);
+            setEntryArr([...entryArr, entryObj]);
+          }}
+          // disabled={isDisabled ? true : false}
+        >
+          Add Entry
+        </button>
+      </div>
     </motion.div>
   );
 }

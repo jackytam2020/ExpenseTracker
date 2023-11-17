@@ -1,3 +1,5 @@
+@use '../styles/partials/breakpoints' as *;
+
 .categoryPicker {
   display: flex;
   align-items: center;
@@ -40,5 +42,14 @@
 
   &__dropAreaItem {
     cursor: pointer;
+  }
+}
+
+@include small() {
+  .categoryPicker {
+    &__dropDownModal {
+      @extend .categoryPicker__dropDown;
+      width: 90%;
+    }
   }
 }
