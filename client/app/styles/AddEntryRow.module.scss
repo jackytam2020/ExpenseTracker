@@ -47,8 +47,11 @@
   }
 
   &__actionButtons {
-    align-self: flex-end;
-    margin-top: auto;
+    justify-content: flex-end;
+    margin-top: 1rem;
+    display: flex;
+    width: 100%;
+    column-gap: 0.5rem;
   }
 }
 
@@ -56,6 +59,10 @@
   .addEntryRow {
     height: 100%;
     padding: 1rem;
+
+    &__actionButtons {
+      margin-top: auto;
+    }
   }
 }
 @include medium() {

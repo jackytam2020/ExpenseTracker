@@ -23,3 +23,9 @@
     cursor: pointer;
   }
 }
+
+@include small() {
+  .toolbar {
+    margin-top: 2rem;
+  }
+}

@@ -7,6 +7,7 @@ import EntryTable from '../components/EntryTable';
 import CategoryChart from '../components/CategoryChart';
 import MonthlyChart from '../components/MonthlyChart';
 import YearlyCategoryChart from '../components/YearlyCategoryChart';
+import ToggleSwitch from '../atoms/ToggleSwitch';
 
 import axios from 'axios';
 import dayjs from 'dayjs';
@@ -178,24 +179,7 @@ export default function Home() {
 
   return (
     <main className={HomeStyles.main}>
-      {screenWidth < 1279 && (
-        <div className={HomeStyles.main__toggleButtons}>
-          <button
-            onClick={() => {
-              setSelectedView('entries');
-            }}
-          >
-            entries
-          </button>
-          <button
-            onClick={() => {
-              setSelectedView('charts');
-            }}
-          >
-            charts
-          </button>
-        </div>
-      )}
+      {screenWidth < 1279 && <ToggleSwitch setSelectedView={setSelectedView} />}
       <div className={HomeStyles.main__flexedContents}>
         <div
           className={

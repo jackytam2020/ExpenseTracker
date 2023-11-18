@@ -8,6 +8,7 @@
   align-items: center;
   cursor: pointer;
   color: white;
+  border: none;
 
   &__linkedText {
     color: white;
@@ -25,4 +26,15 @@
 .deleteButton {
   @extend .button;
   background-color: #b01717;
+}
+
+.confirmButton {
+  @extend .button;
+  background-color: #1476cc;
+}
+
+.disabled {
+  @extend .button;
+  background-color: grey;
+  cursor: not-allowed;
 }
