@@ -12,6 +12,9 @@ import ToggleSwitch from '../atoms/ToggleSwitch';
 import axios from 'axios';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
+import ReactPaginate from 'react-paginate';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
 //Types
 import { entryType, modalEntryType, globalType } from '../utils/interfaces';
@@ -48,6 +51,8 @@ export default function Home() {
   const [data, setData] = useState<entryType[]>();
   const [selectedView, setSelectedView] = useState('entries');
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  const [itemOffset, setItemOffset] = useState(0);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(15);
   const router = useRouter();
   const globalStates = useSelector((state: globalType) => state);
   const dispatch = useDispatch();
@@ -177,6 +182,19 @@ export default function Home() {
     };
   }, []);
 
+  //paginate functions
+
+  const endOffset = itemOffset + itemsPerPage;
+  const currentItems = data ? data.slice(itemOffset, endOffset) : 0;
+  const pageCount = data ? Math.ceil(data.length / itemsPerPage) : 0;
+
+  const handlePageClick = (event: { selected: number }) => {
+    if (data) {
+      const newOffset = (event.selected * itemsPerPage) % data.length;
+      setItemOffset(newOffset);
+    }
+  };
+
   return (
     <main className={HomeStyles.main}>
       {screenWidth < 1279 && <ToggleSwitch setSelectedView={setSelectedView} />}
@@ -193,9 +211,37 @@ export default function Home() {
             addEntries={addEntries}
           />
           <div className={HomeStyles.main__entryTable}>
-            {data && (
+            <div className={HomeStyles.main__pageCount}>
+              <p>Show # of Entries:</p>
+              <input
+                type="number"
+                className={HomeStyles.main__pageCountInput}
+                value={itemsPerPage}
+                onChange={(e) => {
+                  setItemsPerPage(parseInt(e.target.value));
+                }}
+              ></input>
+            </div>
+            <ReactPaginate
+              breakLabel="..."
+              onPageChange={handlePageClick}
+              pageCount={pageCount}
+              previousLabel={
+                <NavigateBeforeIcon style={{ fontSize: '2rem' }} />
+              }
+              nextLabel={<NavigateNextIcon style={{ fontSize: '2rem' }} />}
+              renderOnZeroPageCount={null}
+              disabledClassName={HomeStyles.main__paginateDisabled}
+              activeLinkClassName={HomeStyles.main__paginateSelected}
+              previousClassName={HomeStyles.main__paginatePrevious}
+              nextClassName={HomeStyles.main__paginateNext}
+              className={HomeStyles.main__paginate}
+              pageLinkClassName={HomeStyles.main__paginateItem}
+            />
+
+            {currentItems && (
               <EntryTable
-                data={data}
+                data={currentItems}
                 editEntry={editEntry}
                 deleteEntry={deleteEntry}
               />
