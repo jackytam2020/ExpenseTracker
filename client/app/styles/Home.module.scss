@@ -95,6 +95,10 @@
     &__rightHidden {
       display: none;
     }
+
+    &__pageCount {
+      margin-top: 2rem;
+    }
   }
 }
 @include medium() {

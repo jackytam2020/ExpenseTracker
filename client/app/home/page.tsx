@@ -21,7 +21,7 @@ import { entryType, modalEntryType, globalType } from '../utils/interfaces';
 
 //redux functions
 import { useSelector } from 'react-redux';
-import { setAuthorized } from '../state/global';
+import { setAuthorized, setItemsPerPage } from '../state/global';
 import { useDispatch } from 'react-redux';
 
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -52,7 +52,6 @@ export default function Home() {
   const [selectedView, setSelectedView] = useState('entries');
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [itemOffset, setItemOffset] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState<number>(15);
   const router = useRouter();
   const globalStates = useSelector((state: globalType) => state);
   const dispatch = useDispatch();
@@ -184,13 +183,16 @@ export default function Home() {
 
   //paginate functions
 
-  const endOffset = itemOffset + itemsPerPage;
+  const endOffset = itemOffset + globalStates.itemsPerPage;
   const currentItems = data ? data.slice(itemOffset, endOffset) : 0;
-  const pageCount = data ? Math.ceil(data.length / itemsPerPage) : 0;
+  const pageCount = data
+    ? Math.ceil(data.length / globalStates.itemsPerPage)
+    : 0;
 
   const handlePageClick = (event: { selected: number }) => {
     if (data) {
-      const newOffset = (event.selected * itemsPerPage) % data.length;
+      const newOffset =
+        (event.selected * globalStates.itemsPerPage) % data.length;
       setItemOffset(newOffset);
     }
   };
@@ -216,9 +218,13 @@ export default function Home() {
               <input
                 type="number"
                 className={HomeStyles.main__pageCountInput}
-                value={itemsPerPage}
+                value={globalStates.itemsPerPage}
                 onChange={(e) => {
-                  setItemsPerPage(parseInt(e.target.value));
+                  dispatch(
+                    setItemsPerPage({
+                      newCount: parseInt(e.target.value),
+                    })
+                  );
                 }}
               ></input>
             </div>

@@ -6,6 +6,7 @@ const initialState = {
   selectedYear: dayjs().year(),
   authorized: false,
   user: {},
+  itemsPerPage: 15,
 };
 
 export const globalSlice = createSlice({
@@ -23,9 +24,13 @@ export const globalSlice = createSlice({
       state.authorized = state.authorized === false;
       state.user = {};
     },
+    setItemsPerPage: (state, action) => {
+      state.itemsPerPage = action.payload.newCount;
+    },
   },
 });
 
-export const { setNewMonth, setAuthorized, setLogout } = globalSlice.actions;
+export const { setNewMonth, setAuthorized, setLogout, setItemsPerPage } =
+  globalSlice.actions;
 
 export default globalSlice.reducer;
