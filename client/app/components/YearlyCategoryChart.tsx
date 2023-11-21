@@ -40,14 +40,12 @@ export default function YearlyCategoryChart({
   const [selectedYear, setSelectedYear] = useState<number | string>(
     dayjs().year()
   );
-  const globalStates = useSelector((state: globalType) => state);
+  const currentUserID = useSelector((state: globalType) => state.user.googleId);
 
   async function getYearlyCategorySpend() {
     try {
-      const currentUser = globalStates.user.googleId;
-
       const res = await axios.get(
-        `http://localhost:8080/chartData/${currentUser}/${selectedYear}/getYearlyCategorySpend`
+        `http://localhost:8080/chartData/${currentUserID}/${selectedYear}/getYearlyCategorySpend`
       );
       const dataArr = res.data;
       for (const category in data) {

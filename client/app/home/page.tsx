@@ -21,7 +21,7 @@ import { entryType, modalEntryType, globalType } from '../utils/interfaces';
 
 //redux functions
 import { useSelector } from 'react-redux';
-import { setAuthorized, setItemsPerPage } from '../state/global';
+import { setUser, setItemsPerPage, setAuthorized } from '../state/global';
 import { useDispatch } from 'react-redux';
 
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -53,28 +53,31 @@ export default function Home() {
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [itemOffset, setItemOffset] = useState(0);
   const router = useRouter();
-  const globalStates = useSelector((state: globalType) => state);
+  const itemsPerPage = useSelector((state: globalType) => state.itemsPerPage);
+  const authorized = useSelector((state: globalType) => state.authorized);
+  const currentUserID = useSelector((state: globalType) => state.user.googleId);
   const dispatch = useDispatch();
 
   async function getEntriesByMonth(adjustedMonth?: number | string) {
-    try {
-      const currentMonth = dayjs().month() + 1;
-      const currentYear = dayjs().year();
-      const currentUser = globalStates.user.googleId;
+    if (currentUserID !== undefined) {
+      try {
+        const currentMonth = dayjs().month() + 1;
+        const currentYear = dayjs().year();
 
-      if (adjustedMonth && (adjustedMonth as number) < 10) {
-        adjustedMonth = '0' + adjustedMonth.toString();
+        if (adjustedMonth && (adjustedMonth as number) < 10) {
+          adjustedMonth = '0' + adjustedMonth.toString();
+        }
+
+        const monthSelector = adjustedMonth ? adjustedMonth : currentMonth;
+        const res = await axios.get(
+          `http://localhost:8080/entries/${currentUserID}/${monthSelector}/${currentYear}/getEntriesByMonth`
+        );
+        setData(res.data);
+      } catch (error) {
+        // Handle the error here
+        console.error('Error:', error);
+        setData([]);
       }
-
-      const monthSelector = adjustedMonth ? adjustedMonth : currentMonth;
-      const res = await axios.get(
-        `http://localhost:8080/entries/${currentUser}/${monthSelector}/${currentYear}/getEntriesByMonth`
-      );
-      setData(res.data);
-    } catch (error) {
-      // Handle the error here
-      console.error('Error:', error);
-      setData([]);
     }
   }
 
@@ -83,7 +86,6 @@ export default function Home() {
     selectedMonth: number | string
   ) {
     const currentYear = dayjs().year();
-    const currentUser = globalStates.user.googleId;
 
     if ((selectedMonth as number) < 10) {
       selectedMonth = '0' + selectedMonth.toString();
@@ -91,7 +93,7 @@ export default function Home() {
 
     try {
       const res = await axios.patch(
-        `http://localhost:8080/entries/${editedEntryObj._id}/${currentUser}/${selectedMonth}/${currentYear}/editEntry`,
+        `http://localhost:8080/entries/${editedEntryObj._id}/${currentUserID}/${selectedMonth}/${currentYear}/editEntry`,
         {
           newDescription: editedEntryObj.description,
           newCategory: editedEntryObj.category,
@@ -102,8 +104,7 @@ export default function Home() {
       );
       setData(res.data);
     } catch (error) {
-      // Handle the error here
-      console.error('Error:', error);
+      console.log('Error', error);
     }
   }
 
@@ -112,7 +113,6 @@ export default function Home() {
     selectedMonth: number | string
   ) {
     const currentYear = dayjs().year();
-    const currentUser = globalStates.user.googleId;
 
     if ((selectedMonth as number) < 10) {
       selectedMonth = '0' + selectedMonth.toString();
@@ -120,7 +120,7 @@ export default function Home() {
 
     try {
       const res = await axios.post(
-        `http://localhost:8080/entries/${currentUser}/${selectedMonth}/${currentYear}/addEntry`,
+        `http://localhost:8080/entries/${currentUserID}/${selectedMonth}/${currentYear}/addEntry`,
         entryArr
       );
       setData(res.data);
@@ -132,7 +132,6 @@ export default function Home() {
 
   async function deleteEntry(entryID: string, selectedMonth: number | string) {
     const currentYear = dayjs().year();
-    const currentUser = globalStates.user.googleId;
 
     if ((selectedMonth as number) < 10) {
       selectedMonth = '0' + selectedMonth.toString();
@@ -140,7 +139,7 @@ export default function Home() {
 
     try {
       const res = await axios.delete(
-        `http://localhost:8080/entries/${entryID}/${currentUser}/${selectedMonth}/${currentYear}/deleteEntry`
+        `http://localhost:8080/entries/${entryID}/${currentUserID}/${selectedMonth}/${currentYear}/deleteEntry`
       );
       setData(res.data);
     } catch (error) {
@@ -155,7 +154,8 @@ export default function Home() {
         withCredentials: true,
       });
       //if a user object is returned, authorize them to the application and assign the user to the redux object
-      await dispatch(setAuthorized(res.data));
+      dispatch(setAuthorized());
+      dispatch(setUser(res.data));
     } catch (error) {
       // Handle the error here
       console.error('Error:', error);
@@ -166,8 +166,13 @@ export default function Home() {
 
   useEffect(() => {
     grabUser();
-    getEntriesByMonth();
-  }, [globalStates.user.googleId]);
+  }, []);
+
+  useEffect(() => {
+    if (currentUserID) {
+      getEntriesByMonth();
+    }
+  }, [currentUserID]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -183,16 +188,13 @@ export default function Home() {
 
   //paginate functions
 
-  const endOffset = itemOffset + globalStates.itemsPerPage;
+  const endOffset = itemOffset + itemsPerPage;
   const currentItems = data ? data.slice(itemOffset, endOffset) : 0;
-  const pageCount = data
-    ? Math.ceil(data.length / globalStates.itemsPerPage)
-    : 0;
+  const pageCount = data ? Math.ceil(data.length / itemsPerPage) : 0;
 
   const handlePageClick = (event: { selected: number }) => {
     if (data) {
-      const newOffset =
-        (event.selected * globalStates.itemsPerPage) % data.length;
+      const newOffset = (event.selected * itemsPerPage) % data.length;
       setItemOffset(newOffset);
     }
   };
@@ -218,7 +220,7 @@ export default function Home() {
               <input
                 type="number"
                 className={HomeStyles.main__pageCountInput}
-                value={globalStates.itemsPerPage}
+                value={itemsPerPage}
                 onChange={(e) => {
                   dispatch(
                     setItemsPerPage({

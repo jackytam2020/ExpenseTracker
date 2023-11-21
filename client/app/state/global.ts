@@ -16,12 +16,14 @@ export const globalSlice = createSlice({
     setNewMonth: (state, action) => {
       state.selectedMonth = action.payload.selectedMonth;
     },
-    setAuthorized: (state, action) => {
-      state.authorized = state.authorized === true;
+    setAuthorized: (state) => {
+      state.authorized = state.authorized = true;
+    },
+    setUser: (state, action) => {
       state.user = action.payload;
     },
     setLogout: (state) => {
-      state.authorized = state.authorized === false;
+      state.authorized = state.authorized = false;
       state.user = {};
     },
     setItemsPerPage: (state, action) => {
@@ -30,7 +32,12 @@ export const globalSlice = createSlice({
   },
 });
 
-export const { setNewMonth, setAuthorized, setLogout, setItemsPerPage } =
-  globalSlice.actions;
+export const {
+  setNewMonth,
+  setUser,
+  setAuthorized,
+  setLogout,
+  setItemsPerPage,
+} = globalSlice.actions;
 
 export default globalSlice.reducer;

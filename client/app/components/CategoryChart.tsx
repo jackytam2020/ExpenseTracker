@@ -26,7 +26,7 @@ type categoryType = {
 
 export default function CategoryChart({ entries }: { entries: entryType[] }) {
   const monthState = useSelector((state: globalType) => state.selectedMonth);
-  const globalStates = useSelector((state: globalType) => state);
+  const currentUserID = useSelector((state: globalType) => state.user.googleId);
   const [data, setData] = useState<categoryType>({
     Income: 0,
     Gas: 0,
@@ -47,9 +47,8 @@ export default function CategoryChart({ entries }: { entries: entryType[] }) {
     }
 
     try {
-      const currentUser = globalStates.user.googleId;
       const res = await axios.get(
-        `http://localhost:8080/chartData/${currentUser}/${selectedMonth}/${currentYear}/getCategoryExpenses`
+        `http://localhost:8080/chartData/${currentUserID}/${selectedMonth}/${currentYear}/getCategoryExpenses`
       );
 
       const dataArr = res.data;
