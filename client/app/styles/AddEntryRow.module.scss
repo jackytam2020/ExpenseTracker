@@ -1,11 +1,14 @@
+@use '../styles/partials/breakpoints' as *;
+
 .addEntryRow {
-  width: 400px;
-  height: 100%;
+  display: flex;
+  flex-direction: column;
 
   &__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
 
     p {
       font-size: 2rem;
@@ -41,5 +44,34 @@
   &__amountInput {
     @extend .addEntryRow__descInput;
     width: 50%;
+  }
+
+  &__actionButtons {
+    justify-content: flex-end;
+    margin-top: 1rem;
+    display: flex;
+    width: 100%;
+    column-gap: 0.5rem;
+  }
+}
+
+@include small() {
+  .addEntryRow {
+    height: 100%;
+    padding: 1rem;
+
+    &__actionButtons {
+      margin-top: auto;
+    }
+  }
+}
+@include medium() {
+  .addEntryRow {
+    width: 400px;
+  }
+}
+@include large() {
+  .addEntryRow {
+    width: 400px;
   }
 }

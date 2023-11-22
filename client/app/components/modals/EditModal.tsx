@@ -7,6 +7,7 @@ import { create, all } from 'mathjs';
 
 import CategoryPicker from '@/app/atoms/CategoryPicker';
 import DatePick from '@/app/atoms/DatePick';
+import Button from '@/app/atoms/Button';
 
 //types
 import { entryType, modalEntryType, globalType } from '../../utils/interfaces';
@@ -107,7 +108,11 @@ export default function EditModal({
     setEntryObj({ ...entryObj, date: date });
   };
 
-  const submitEntryEdit = () => {
+  const handleCancel = () => {
+    setIsEditModalOpen(false);
+  };
+
+  const handleSubmit = () => {
     if (entryArr && setEntryArr) {
       setEntryArr((prevEntryArr: modalEntryType[]) => {
         const newArray = [...prevEntryArr];
@@ -120,6 +125,8 @@ export default function EditModal({
     if (editEntry) {
       editEntry(entryObj as entryType, monthState);
     }
+
+    setIsEditModalOpen(false);
   };
 
   return (
@@ -179,14 +186,10 @@ export default function EditModal({
             />
           </div>
         </div>
-        <button
-          onClick={() => {
-            submitEntryEdit();
-            setIsEditModalOpen(false);
-          }}
-        >
-          Edit Entry
-        </button>
+        <div className={EditModalStyles.editModal__actionButton}>
+          <Button type="Cancel" text="Cancel" onClick={handleCancel} />
+          <Button onClick={handleSubmit} type={'Confirm'} text={'Edit Entry'} />
+        </div>
       </div>
     </Modal>
   );

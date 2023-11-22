@@ -7,6 +7,7 @@ import EntryTable from '../components/EntryTable';
 import CategoryChart from '../components/CategoryChart';
 import MonthlyChart from '../components/MonthlyChart';
 import YearlyCategoryChart from '../components/YearlyCategoryChart';
+import ToggleSwitch from '../atoms/ToggleSwitch';
 
 import axios from 'axios';
 import dayjs from 'dayjs';
@@ -45,6 +46,8 @@ Chart.register(
 
 export default function Home() {
   const [data, setData] = useState<entryType[]>();
+  const [selectedView, setSelectedView] = useState('entries');
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const router = useRouter();
   const globalStates = useSelector((state: globalType) => state);
   const dispatch = useDispatch();
@@ -162,28 +165,59 @@ export default function Home() {
     getEntriesByMonth();
   }, [globalStates.user.googleId]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   return (
     <main className={HomeStyles.main}>
-      <div className={HomeStyles.main__left}>
-        <Toolbar
-          getEntriesByMonth={getEntriesByMonth}
-          addEntries={addEntries}
-        />
-        {data && (
-          <EntryTable
-            data={data}
-            editEntry={editEntry}
-            deleteEntry={deleteEntry}
+      {screenWidth < 1279 && <ToggleSwitch setSelectedView={setSelectedView} />}
+      <div className={HomeStyles.main__flexedContents}>
+        <div
+          className={
+            selectedView === 'entries'
+              ? HomeStyles.main__left
+              : HomeStyles.main__leftHidden
+          }
+        >
+          <Toolbar
+            getEntriesByMonth={getEntriesByMonth}
+            addEntries={addEntries}
           />
+          <div className={HomeStyles.main__entryTable}>
+            {data && (
+              <EntryTable
+                data={data}
+                editEntry={editEntry}
+                deleteEntry={deleteEntry}
+              />
+            )}
+          </div>
+        </div>
+        {data && (
+          <div
+            className={
+              selectedView === 'charts'
+                ? HomeStyles.main__right
+                : screenWidth < 1279
+                ? HomeStyles.main__rightHidden
+                : HomeStyles.main__right
+            }
+          >
+            <CategoryChart entries={data} />
+            <MonthlyChart entries={data} />
+            <YearlyCategoryChart entries={data} />
+          </div>
         )}
       </div>
-      {data && (
-        <div className={HomeStyles.main__right}>
-          <CategoryChart entries={data} />
-          <MonthlyChart entries={data} />
-          <YearlyCategoryChart entries={data} />
-        </div>
-      )}
     </main>
   );
 }

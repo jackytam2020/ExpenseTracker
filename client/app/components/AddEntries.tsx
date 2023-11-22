@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import AddEntriesStyles from '../styles/AddEntries.module.scss';
 
 import EntryTable from './EntryTable';
+import Button from '../atoms/Button';
 
 import { motion } from 'framer-motion';
 import { useWizard } from 'react-use-wizard';
@@ -34,6 +35,18 @@ export default function AddEntries({
 }) {
   const { nextStep } = useWizard();
   const monthState = useSelector((state: globalType) => state.selectedMonth);
+
+  const handleCancel = () => {
+    setIsAddModalOpen(false);
+    setEntryArr([]);
+    setStep(0);
+  };
+
+  const handleConfirm = () => {
+    addEntries(entryArr, monthState);
+    setEntryArr([]);
+    setIsAddModalOpen(false);
+  };
 
   return (
     <motion.div
@@ -76,23 +89,14 @@ export default function AddEntries({
       </div>
 
       <div className={AddEntriesStyles.addEntries__actionButtons}>
-        <button
-          onClick={() => {
-            setIsAddModalOpen(false);
-            setEntryArr([]);
-            setStep(0);
-          }}
-        >
-          Cancel
-        </button>
-        <button
+        <Button onClick={handleCancel} type={'Cancel'} text={'Cancel'} />
+
+        <Button
           disabled={entryArr.length === 0 ? true : false}
-          onClick={() => {
-            addEntries(entryArr, monthState);
-            setEntryArr([]);
-            setIsAddModalOpen(false);
-          }}
-        >{`Add (${entryArr.length}) entries`}</button>
+          onClick={handleConfirm}
+          type={entryArr.length === 0 ? 'Disabled' : 'Confirm'}
+          text={`Add (${entryArr.length}) entries`}
+        />
       </div>
     </motion.div>
   );

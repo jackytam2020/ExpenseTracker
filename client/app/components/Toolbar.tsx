@@ -23,7 +23,7 @@ export default function Toolbar({
 
   return (
     <div className={ToolbarStyles.toolbar}>
-      <div className={ToolbarStyles.toolbar__item}>
+      <div className={ToolbarStyles.toolbar__addItem}>
         <AddIcon
           className={ToolbarStyles.toolbar__addIcon}
           onClick={() => {
@@ -31,15 +31,15 @@ export default function Toolbar({
           }}
         ></AddIcon>
       </div>
-      <div className={ToolbarStyles.toolbar__item}>
-        <MonthPicker getEntriesByMonth={getEntriesByMonth} />
-      </div>
-      <div className={ToolbarStyles.toolbar__item}>
+
+      <MonthPicker getEntriesByMonth={getEntriesByMonth} />
+
+      {/* <div className={ToolbarStyles.toolbar__item}>
         <CategoryPicker />
       </div>
       <div className={ToolbarStyles.toolbar__item}>
         <Search />
-      </div>
+      </div> */}
       <AddModal
         isAddModalOpen={isAddModalOpen}
         setIsAddModalOpen={setIsAddModalOpen}

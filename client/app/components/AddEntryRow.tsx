@@ -4,6 +4,7 @@ import AddEntryRowStyles from '../styles/AddEntryRow.module.scss';
 
 import CategoryPicker from '../atoms/CategoryPicker';
 import DatePick from '../atoms/DatePick';
+import Button from '../atoms/Button';
 
 import { motion } from 'framer-motion';
 import { useWizard } from 'react-use-wizard';
@@ -82,6 +83,17 @@ export default function AddEntryRow({
     // setIsDisabled(true);
   };
 
+  const handleBack = () => {
+    previousStep();
+    setStep(1);
+  };
+
+  const handleAdd = () => {
+    previousStep();
+    setStep(1);
+    setEntryArr([...entryArr, entryObj]);
+  };
+
   useEffect(() => {
     isValidEntry();
   }, [entryObj]);
@@ -140,24 +152,11 @@ export default function AddEntryRow({
           <DatePick handleDateChange={handleDateChange} />
         </div>
       </div>
-      <button
-        onClick={() => {
-          previousStep();
-          setStep(1);
-        }}
-      >
-        Back
-      </button>
-      <button
-        onClick={() => {
-          previousStep();
-          setStep(1);
-          setEntryArr([...entryArr, entryObj]);
-        }}
-        // disabled={isDisabled ? true : false}
-      >
-        Add Entry
-      </button>
+
+      <div className={AddEntryRowStyles.addEntryRow__actionButtons}>
+        <Button type="Cancel" text="Back" onClick={handleBack} />
+        <Button type="Confirm" text="Add Entry" onClick={handleAdd} />
+      </div>
     </motion.div>
   );
 }

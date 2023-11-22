@@ -1,3 +1,5 @@
+@use '../styles/partials/breakpoints' as *;
+
 .table {
   width: 100%;
   table-layout: fixed;
@@ -26,4 +28,13 @@
 
 .table th:nth-child(2) {
   width: 30%;
+}
+
+@include small() {
+  .table th {
+    font-size: 0.8rem;
+  }
+}
+// @include medium(){}
+@include large() {
 }

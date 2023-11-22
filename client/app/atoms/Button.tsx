@@ -7,11 +7,13 @@ export default function Button({
   type,
   onClick,
   linkedButton,
+  disabled,
 }: {
   text: string;
   type?: string;
   onClick?: () => void;
   linkedButton?: string;
+  disabled?: boolean;
 }) {
   const [buttonStyle, setButtonStyle] = useState(ButtonStyles.button);
 
@@ -20,10 +22,16 @@ export default function Button({
       setButtonStyle(ButtonStyles.cancelButton);
     } else if (type === 'Delete') {
       setButtonStyle(ButtonStyles.deleteButton);
+    } else if (type === 'Confirm') {
+      setButtonStyle(ButtonStyles.confirmButton);
+    } else if (type === 'Disabled') {
+      setButtonStyle(ButtonStyles.disabled);
     }
-  }, []);
+  }, [type]);
   return (
-    <div
+    <button
+      type="button"
+      disabled={disabled ? disabled : false}
       className={buttonStyle}
       onClick={() => {
         if (onClick) {
@@ -38,6 +46,6 @@ export default function Button({
       ) : (
         <p className={ButtonStyles.button__text}>{text}</p>
       )}
-    </div>
+    </button>
   );
 }
