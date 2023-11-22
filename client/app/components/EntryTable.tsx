@@ -11,12 +11,16 @@ export default function EntryTable({
   entryArr,
   setEntryArr,
   data,
+  editEntry,
+  deleteEntry,
 }: {
   modalEntries?: modalEntryType[];
   handleRowDelete?: (index: number) => void;
   entryArr?: modalEntryType[];
   data?: entryType[];
   setEntryArr?: React.Dispatch<React.SetStateAction<modalEntryType[]>>;
+  editEntry?: (entryType: entryType, selectedMonth: number) => void;
+  deleteEntry?: (entryID: string, selectedMonth: number) => void;
 }) {
   return (
     <table className={EntryTableStyles.table}>
@@ -42,8 +46,15 @@ export default function EntryTable({
               />
             ))
           : data &&
+            editEntry &&
             data.map((entry, index) => (
-              <EntryRow key={index} index={index} {...entry} />
+              <EntryRow
+                key={index}
+                index={index}
+                {...entry}
+                editEntry={editEntry}
+                deleteEntry={deleteEntry}
+              />
             ))}
       </tbody>
     </table>

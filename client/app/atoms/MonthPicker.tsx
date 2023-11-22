@@ -7,12 +7,17 @@ import dayjs from 'dayjs';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 
+//redux functions
+import { setNewMonth } from '../state/global';
+import { useDispatch } from 'react-redux';
+
 export default function MonthPicker({
   getEntriesByMonth,
 }: {
   getEntriesByMonth: (inputValue: number) => void;
 }) {
   const [inputValue, setInputValue] = useState<number>(dayjs().month() + 1);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (inputValue === 0) {
@@ -21,18 +26,23 @@ export default function MonthPicker({
       setInputValue(12);
     }
     getEntriesByMonth(inputValue);
+    dispatch(
+      setNewMonth({
+        selectedMonth: inputValue,
+      })
+    );
   }, [inputValue]);
 
   return (
     <div className={MonthPickerStyles.monthPicker}>
       <p>month</p>
       <div className={MonthPickerStyles.monthPicker__inputHolder}>
-        <AddIcon
-          className={MonthPickerStyles.monthPicker__inputAdd}
+        <RemoveIcon
+          className={MonthPickerStyles.monthPicker__inputRemove}
           onClick={() => {
-            setInputValue(inputValue + 1);
+            setInputValue(inputValue - 1);
           }}
-        ></AddIcon>
+        ></RemoveIcon>
         <input
           type="number"
           value={inputValue}
@@ -41,12 +51,12 @@ export default function MonthPicker({
           readOnly
           className={MonthPickerStyles.monthPicker__input}
         ></input>
-        <RemoveIcon
-          className={MonthPickerStyles.monthPicker__inputRemove}
+        <AddIcon
+          className={MonthPickerStyles.monthPicker__inputAdd}
           onClick={() => {
-            setInputValue(inputValue - 1);
+            setInputValue(inputValue + 1);
           }}
-        ></RemoveIcon>
+        ></AddIcon>
       </div>
     </div>
   );

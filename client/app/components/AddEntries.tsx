@@ -9,13 +9,11 @@ import { useWizard } from 'react-use-wizard';
 import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
 
-interface entryType {
-  date: string;
-  description: string;
-  category: string;
-  income?: number;
-  debits?: number;
-}
+//Types
+import { modalEntryType, globalType } from '../utils/interfaces';
+
+//redux functions
+import { useSelector } from 'react-redux';
 
 export default function AddEntries({
   step,
@@ -24,15 +22,18 @@ export default function AddEntries({
   setIsAddModalOpen,
   setEntryArr,
   handleRowDelete,
+  addEntries,
 }: {
   step: number;
   setStep: React.Dispatch<React.SetStateAction<number>>;
-  entryArr: entryType[];
+  entryArr: modalEntryType[];
   setIsAddModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setEntryArr: React.Dispatch<React.SetStateAction<entryType[]>>;
+  setEntryArr: React.Dispatch<React.SetStateAction<modalEntryType[]>>;
   handleRowDelete: (index: number) => void;
+  addEntries: (entryArr: modalEntryType[], monthState: number) => void;
 }) {
   const { nextStep } = useWizard();
+  const monthState = useSelector((state: globalType) => state.selectedMonth);
 
   return (
     <motion.div
@@ -86,6 +87,11 @@ export default function AddEntries({
         </button>
         <button
           disabled={entryArr.length === 0 ? true : false}
+          onClick={() => {
+            addEntries(entryArr, monthState);
+            setEntryArr([]);
+            setIsAddModalOpen(false);
+          }}
         >{`Add (${entryArr.length}) entries`}</button>
       </div>
     </motion.div>

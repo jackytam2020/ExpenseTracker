@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.get('/:userID/:month/:year/getEntriesByMonth', getEntriesByMonth);
 router.get('/:userID/:year/getEntriesByYear', getEntriesByYear);
-router.patch('/:entryID/editEntry', editEntry);
+router.patch('/:entryID/:userID/:month/:year/editEntry', editEntry);
 router.delete('/:entryID/:userID/:month/:year/deleteEntry', deleteEntry);
 router.post('/:userID/:month/:year/addEntry', addEntries);
 

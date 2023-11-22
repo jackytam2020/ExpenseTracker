@@ -21,7 +21,7 @@ export default function DatePick({
         value={dayjs(currentDate)}
         onChange={(newValue) => {
           if (newValue) {
-            const formattedDate = dayjs(newValue).format('YYYY/MM/DD');
+            const formattedDate = dayjs(newValue).format('YYYY-MM-DD');
             handleDateChange(formattedDate);
           }
         }}

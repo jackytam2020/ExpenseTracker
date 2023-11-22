@@ -8,9 +8,15 @@ export interface entryType {
 }
 
 export interface modalEntryType {
+  userID?: number;
   date: string;
   description: string;
   category: string;
   income?: number;
   debits?: number;
+}
+
+export interface globalType {
+  selectedMonth: number;
+  selectedYear: number;
 }
