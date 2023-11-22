@@ -1,10 +1,15 @@
 import React from 'react';
 import ProfileStyles from '../styles/UserProfilePic.module.scss';
 
-export default function UserProfilePic() {
+export default function UserProfilePic({ src }: { src: string }) {
   return (
     <div className={ProfileStyles.container}>
-      <p className={ProfileStyles.container__user}>J</p>
+      <img
+        className={ProfileStyles.container__userImage}
+        src={src}
+        referrerPolicy="no-referrer"
+        alt={'User-Profile-Pic'}
+      />
     </div>
   );
 }

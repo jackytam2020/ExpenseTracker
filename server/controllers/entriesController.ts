@@ -8,7 +8,7 @@ export const addEntries = async (req: Request, res: Response) => {
     const entries = req.body;
 
     for (const entryData of entries) {
-      const { userID, description, category, date, income, debits } = entryData;
+      const { description, category, date, income, debits } = entryData;
 
       const entry = new Entry({
         userID,
@@ -26,7 +26,10 @@ export const addEntries = async (req: Request, res: Response) => {
     const updatedEntries = await Entry.find({
       userID,
       date: { $regex: `^${year}-${month}` },
-    });
+    })
+      .sort({ date: -1, createdAt: -1 }) // Sort by date in descending order (most recent first)
+      .exec();
+
     res.status(201).json(updatedEntries);
   } catch (err) {
     res.status(500).json({ message: err });
@@ -40,7 +43,9 @@ export const getEntriesByMonth = async (req: Request, res: Response) => {
     const entries = await Entry.find({
       userID,
       date: { $regex: `^${year}-${month}` },
-    });
+    })
+      .sort({ date: -1, createdAt: -1 })
+      .exec();
 
     if (entries.length === 0) {
       return res
@@ -102,15 +107,14 @@ export const editEntry = async (req: Request, res: Response) => {
     if (newCategory === 'Income') updateFields.debits = 0;
     if (newCategory !== 'Income') updateFields.income = 0;
 
-    const result = await Entry.updateOne(
-      { _id: entryID },
-      { $set: updateFields }
-    );
+    await Entry.updateOne({ _id: entryID }, { $set: updateFields });
 
     const updatedEntries = await Entry.find({
       userID,
       date: { $regex: `^${year}-${month}` },
-    });
+    })
+      .sort({ date: -1, createdAt: -1 })
+      .exec();
 
     res.status(200).json(updatedEntries);
   } catch (err) {
@@ -132,7 +136,9 @@ export const deleteEntry = async (req: Request, res: Response) => {
     const updatedEntries = await Entry.find({
       userID,
       date: { $regex: `^${year}-${month}` },
-    });
+    })
+      .sort({ date: -1, createdAt: -1 })
+      .exec();
 
     res.status(200).json(updatedEntries);
   } catch (err) {

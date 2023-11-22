@@ -16,7 +16,17 @@ export interface modalEntryType {
   debits?: number;
 }
 
+type UserType = {
+  _id: string;
+  email: string;
+  googleId: string;
+  name: string;
+  picture: string;
+};
+
 export interface globalType {
   selectedMonth: number;
   selectedYear: number;
+  authorized: boolean;
+  user: UserType;
 }

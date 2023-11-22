@@ -7,7 +7,10 @@ import dayjs from 'dayjs';
 import { Line } from 'react-chartjs-2';
 
 //Types
-import { entryType } from '../utils/interfaces';
+import { entryType, globalType } from '../utils/interfaces';
+
+//redux functions
+import { useSelector } from 'react-redux';
 
 type monthlyData = {
   _id: string;
@@ -19,11 +22,13 @@ export default function MonthlyChart({ entries }: { entries: entryType[] }) {
   const [selectedYear, setSelectedYear] = useState<number | string>(
     dayjs().year()
   );
-
+  const globalStates = useSelector((state: globalType) => state);
   async function getMonthlySpend() {
     try {
+      const currentUser = globalStates.user.googleId;
+
       const res = await axios.get(
-        `http://localhost:8080/chartData/1/${selectedYear}/getMonthlySpend`
+        `http://localhost:8080/chartData/${currentUser}/${selectedYear}/getMonthlySpend`
       );
       const dataArr = res.data;
 
