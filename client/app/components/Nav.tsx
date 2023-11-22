@@ -15,25 +15,25 @@ import { globalType } from '../utils/interfaces';
 
 export default function Nav() {
   const dispatch = useDispatch();
-  const globalStates = useSelector((state: globalType) => state);
+  const currentUserID = useSelector((state: globalType) => state.user.googleId);
+  const userPic = useSelector((state: globalType) => state.user.picture);
 
   const handleLogout = () => {
     dispatch(setLogout());
+    console.log(currentUserID);
   };
   return (
-    <nav
-      className={globalStates.user._id ? NavStyles.nav : NavStyles.navHidden}
-    >
+    <nav className={currentUserID ? NavStyles.nav : NavStyles.navHidden}>
       <div className={NavStyles.nav__left}>
         <h1>ExpenseTracker</h1>
       </div>
 
       <div className={NavStyles.nav__right}>
-        <UserProfilePic src={globalStates.user.picture} />
+        <UserProfilePic src={userPic} />
         <Button
           text={'Logout'}
-          linkedButton={'http://localhost:8080/auth/logout'}
           onClick={handleLogout}
+          linkedButton={'http://localhost:8080/auth/logout'}
         />
       </div>
     </nav>

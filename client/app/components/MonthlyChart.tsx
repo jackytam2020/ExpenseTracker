@@ -22,13 +22,12 @@ export default function MonthlyChart({ entries }: { entries: entryType[] }) {
   const [selectedYear, setSelectedYear] = useState<number | string>(
     dayjs().year()
   );
-  const globalStates = useSelector((state: globalType) => state);
+  const currentUserID = useSelector((state: globalType) => state.user.googleId);
+
   async function getMonthlySpend() {
     try {
-      const currentUser = globalStates.user.googleId;
-
       const res = await axios.get(
-        `http://localhost:8080/chartData/${currentUser}/${selectedYear}/getMonthlySpend`
+        `http://localhost:8080/chartData/${currentUserID}/${selectedYear}/getMonthlySpend`
       );
       const dataArr = res.data;
 

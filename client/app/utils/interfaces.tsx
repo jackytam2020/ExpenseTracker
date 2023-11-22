@@ -29,4 +29,5 @@ export interface globalType {
   selectedYear: number;
   authorized: boolean;
   user: UserType;
+  itemsPerPage: number;
 }

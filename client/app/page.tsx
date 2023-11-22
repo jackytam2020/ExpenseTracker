@@ -5,15 +5,8 @@ import loginStyles from './styles/Login.module.scss';
 
 import { useRouter } from 'next/navigation';
 
-//Types
-import { globalType } from './utils/interfaces';
-
-//redux functions
-import { useSelector } from 'react-redux';
-
 export default function Login() {
   const router = useRouter();
-  const globalStates = useSelector((state: globalType) => state);
 
   async function loginCallback() {
     try {
