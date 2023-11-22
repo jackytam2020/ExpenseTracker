@@ -9,6 +9,7 @@ import { motion } from 'framer-motion';
 import { useWizard } from 'react-use-wizard';
 import CloseIcon from '@mui/icons-material/Close';
 import dayjs from 'dayjs';
+import { create, all } from 'mathjs';
 
 //Types
 import { modalEntryType } from '../utils/interfaces';
@@ -36,6 +37,7 @@ export default function AddEntryRow({
     debits: 0,
   });
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
+  const math = create(all);
 
   const handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEntryObj({ ...entryObj, description: e.target.value });
@@ -46,11 +48,17 @@ export default function AddEntryRow({
   };
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = parseFloat(e.target.value);
-    if (entryObj.category === 'Income') {
-      setEntryObj({ ...entryObj, income: newValue, debits: 0 });
-    } else if (entryObj.category !== 'Income') {
-      setEntryObj({ ...entryObj, debits: newValue, income: 0 });
+    try {
+      const input = e.target.value;
+      const evaluatedResult = math.evaluate(input);
+
+      if (entryObj.category === 'Income') {
+        setEntryObj({ ...entryObj, income: evaluatedResult, debits: 0 });
+      } else if (entryObj.category !== 'Income') {
+        setEntryObj({ ...entryObj, debits: evaluatedResult, income: 0 });
+      }
+    } catch {
+      console.log('invalid expression');
     }
   };
 
@@ -120,7 +128,7 @@ export default function AddEntryRow({
         <div className={AddEntryRowStyles.addEntryRow__inputRow}>
           <p className={AddEntryRowStyles.addEntryRow__inputsLabel}>Amount</p>
           <input
-            type="number"
+            type="text"
             placeholder="e.g. $2000"
             onChange={handleAmountChange}
             className={AddEntryRowStyles.addEntryRow__amountInput}

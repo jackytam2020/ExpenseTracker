@@ -21,6 +21,7 @@
     "chartjs-plugin-datalabels": "^2.2.0",
     "dayjs": "^1.11.10",
     "framer-motion": "^10.16.4",
+    "mathjs": "^12.0.0",
     "next": "14.0.1",
     "react": "^18",
     "react-chartjs-2": "^5.2.0",

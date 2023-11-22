@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import EditModalStyles from '../../styles/EditModal.module.scss';
 import Modal from '@mui/material/Modal';
 import CloseIcon from '@mui/icons-material/Close';
+import { create, all } from 'mathjs';
 
 import CategoryPicker from '@/app/atoms/CategoryPicker';
 import DatePick from '@/app/atoms/DatePick';
@@ -60,6 +61,7 @@ export default function EditModal({
     income: income,
     debits: debits,
   });
+  const math = create(all);
 
   const monthState = useSelector((state: globalType) => state.selectedMonth);
 
@@ -86,11 +88,18 @@ export default function EditModal({
   };
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = parseFloat(e.target.value);
-    if (entryObj.category === 'Income') {
-      setEntryObj({ ...entryObj, income: newValue, debits: 0 });
-    } else if (entryObj.category !== 'Income') {
-      setEntryObj({ ...entryObj, debits: newValue, income: 0 });
+    const input = e.target.value;
+
+    try {
+      const evaluatedResult = math.evaluate(input);
+
+      if (entryObj.category === 'Income') {
+        setEntryObj({ ...entryObj, income: evaluatedResult, debits: 0 });
+      } else {
+        setEntryObj({ ...entryObj, debits: evaluatedResult, income: 0 });
+      }
+    } catch {
+      console.log('Invalid expression');
     }
   };
 
@@ -155,8 +164,8 @@ export default function EditModal({
           <div className={EditModalStyles.editModal__inputRow}>
             <p className={EditModalStyles.editModal__inputsLabel}>Amount</p>
             <input
-              type="number"
-              value={entryObj.income ? entryObj.income : entryObj.debits}
+              type="text"
+              defaultValue={entryObj.income ? entryObj.income : entryObj.debits}
               className={EditModalStyles.editModal__amountInput}
               onChange={handleAmountChange}
             ></input>
