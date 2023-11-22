@@ -1,0 +1,10 @@
+.nav {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+
+  &__right {
+    display: flex;
+    column-gap: 1rem;
+  }
+}

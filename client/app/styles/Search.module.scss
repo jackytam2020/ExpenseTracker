@@ -1,0 +1,21 @@
+.search {
+  height: 30px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+
+  input {
+    border: none;
+    outline: none;
+    flex: 1;
+    padding: 0;
+    max-width: 100px;
+  }
+
+  &__Icon {
+    cursor: pointer;
+  }
+}
