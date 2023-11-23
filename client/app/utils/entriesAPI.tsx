@@ -7,7 +7,7 @@ export async function getEntriesByMonth(adjustedMonth?: number) {
     const currentYear = dayjs().year();
     const monthSelector = adjustedMonth ? adjustedMonth : currentMonth;
     const res = await axios.get(
-      `http://localhost:8080/entries/1/${monthSelector}/${currentYear}/getEntriesByMonth`
+      `${process.env.HOST}/entries/1/${monthSelector}/${currentYear}/getEntriesByMonth`
     );
 
     console.log(res.data);

@@ -10,7 +10,7 @@ export default function Login() {
 
   async function loginCallback() {
     try {
-      const res = await axios.get('http://localhost:8080/auth/profile', {
+      const res = await axios.get(`http://localhost:8080/auth/profile`, {
         withCredentials: true,
       });
 
@@ -30,7 +30,7 @@ export default function Login() {
         <h3>Log into your account </h3>
         <a
           className={loginStyles.login__googleBox}
-          href="http://localhost:8080/auth/google"
+          href={`http://localhost:8080/auth/google`}
         >
           <img
             src="https://www.svgrepo.com/show/475656/google-color.svg"

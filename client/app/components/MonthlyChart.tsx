@@ -27,7 +27,7 @@ export default function MonthlyChart({ entries }: { entries: entryType[] }) {
   async function getMonthlySpend() {
     try {
       const res = await axios.get(
-        `http://localhost:8080/chartData/${currentUserID}/${selectedYear}/getMonthlySpend`
+        `${process.env.HOST}/chartData/${currentUserID}/${selectedYear}/getMonthlySpend`
       );
       const dataArr = res.data;
 

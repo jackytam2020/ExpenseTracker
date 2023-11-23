@@ -70,7 +70,7 @@ export default function Home() {
 
         const monthSelector = adjustedMonth ? adjustedMonth : currentMonth;
         const res = await axios.get(
-          `http://localhost:8080/entries/${currentUserID}/${monthSelector}/${currentYear}/getEntriesByMonth`
+          `${process.env.HOST}/entries/${currentUserID}/${monthSelector}/${currentYear}/getEntriesByMonth`
         );
         setData(res.data);
       } catch (error) {
@@ -93,7 +93,7 @@ export default function Home() {
 
     try {
       const res = await axios.patch(
-        `http://localhost:8080/entries/${editedEntryObj._id}/${currentUserID}/${selectedMonth}/${currentYear}/editEntry`,
+        `${process.env.HOST}/entries/${editedEntryObj._id}/${currentUserID}/${selectedMonth}/${currentYear}/editEntry`,
         {
           newDescription: editedEntryObj.description,
           newCategory: editedEntryObj.category,
@@ -120,7 +120,7 @@ export default function Home() {
 
     try {
       const res = await axios.post(
-        `http://localhost:8080/entries/${currentUserID}/${selectedMonth}/${currentYear}/addEntry`,
+        `${process.env.HOST}/entries/${currentUserID}/${selectedMonth}/${currentYear}/addEntry`,
         entryArr
       );
       setData(res.data);
@@ -139,7 +139,7 @@ export default function Home() {
 
     try {
       const res = await axios.delete(
-        `http://localhost:8080/entries/${entryID}/${currentUserID}/${selectedMonth}/${currentYear}/deleteEntry`
+        `${process.env.HOST}/entries/${entryID}/${currentUserID}/${selectedMonth}/${currentYear}/deleteEntry`
       );
       setData(res.data);
     } catch (error) {
@@ -150,7 +150,7 @@ export default function Home() {
 
   async function grabUser() {
     try {
-      const res = await axios.get('http://localhost:8080/auth/profile', {
+      const res = await axios.get(`http://localhost:8080/auth/profile`, {
         withCredentials: true,
       });
       //if a user object is returned, authorize them to the application and assign the user to the redux object
@@ -246,17 +246,14 @@ export default function Home() {
               className={HomeStyles.main__paginate}
               pageLinkClassName={HomeStyles.main__paginateItem}
             />
-
-            {currentItems && (
-              <EntryTable
-                data={currentItems}
-                editEntry={editEntry}
-                deleteEntry={deleteEntry}
-              />
-            )}
+            <EntryTable
+              data={currentItems ? currentItems : []}
+              editEntry={editEntry}
+              deleteEntry={deleteEntry}
+            />
           </div>
         </div>
-        {data && (
+        {data !== undefined && (
           <div
             className={
               selectedView === 'charts'

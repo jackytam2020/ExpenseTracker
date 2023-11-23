@@ -48,7 +48,7 @@ export default function CategoryChart({ entries }: { entries: entryType[] }) {
 
     try {
       const res = await axios.get(
-        `http://localhost:8080/chartData/${currentUserID}/${selectedMonth}/${currentYear}/getCategoryExpenses`
+        `${process.env.HOST}/chartData/${currentUserID}/${selectedMonth}/${currentYear}/getCategoryExpenses`
       );
 
       const dataArr = res.data;
