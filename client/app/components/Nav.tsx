@@ -33,7 +33,7 @@ export default function Nav() {
         <Button
           text={'Logout'}
           onClick={handleLogout}
-          linkedButton={'http://localhost:8080/auth/logout'}
+          linkedButton={`${process.env.HOST}/auth/logout`}
         />
       </div>
     </nav>

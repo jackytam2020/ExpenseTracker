@@ -150,7 +150,7 @@ export default function Home() {
 
   async function grabUser() {
     try {
-      const res = await axios.get(`http://localhost:8080/auth/profile`, {
+      const res = await axios.get(`${process.env.HOST}/auth/profile`, {
         withCredentials: true,
       });
       //if a user object is returned, authorize them to the application and assign the user to the redux object
