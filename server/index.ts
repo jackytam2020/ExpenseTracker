@@ -3,7 +3,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import passport from 'passport';
-import cookieSession from 'cookie-session';
+// import cookieSession from 'cookie-session';
+import session from 'express-session';
 
 //exported functions
 import { connectDB } from './config/database.ts';
@@ -26,11 +27,19 @@ app.use(
 );
 dotenv.config({ path: path.resolve(__dirname, './.env') });
 
+app.set('trust proxy', 1);
+
 // setting up express session
 app.use(
-  cookieSession({
-    maxAge: 24 * 60 * 60 * 1000,
-    keys: [process.env.COOKIE_KEY as string],
+  session({
+    secret: process.env.COOKIE_KEY as string,
+    resave: true,
+    saveUninitialized: true,
+    cookie: {
+      sameSite: 'none',
+      secure: true,
+      maxAge: 1000 * 60 * 60 * 24 * 7, // One Week
+    },
   })
 );
 // initialize passport
