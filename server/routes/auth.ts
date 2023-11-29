@@ -1,5 +1,7 @@
 import express from 'express';
 import passport from 'passport';
+import dotenv from 'dotenv';
+
 const router = express.Router();
 
 router.get('/login', (req, res) => {
@@ -17,11 +19,11 @@ router.get(
 router.get(
   '/redirect/google',
   passport.authenticate('google', {
-    failureRedirect: `http://localhost:3000/`,
+    failureRedirect: `${process.env.HOST}/`,
   }),
   (_req, res) => {
     // Successful authentication, redirect to client-side application
-    res.redirect('http://localhost:3000/home');
+    res.redirect(`${process.env.HOST}/home`);
   }
 );
 
@@ -42,7 +44,7 @@ router.get('/logout', function (req, res, next) {
       return next(err);
     }
   });
-  res.redirect(`http://localhost:3000/`);
+  res.redirect(`${process.env.HOST}/`);
 });
 
 export default router;
