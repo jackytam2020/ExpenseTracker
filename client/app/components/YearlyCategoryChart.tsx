@@ -45,7 +45,7 @@ export default function YearlyCategoryChart({
   async function getYearlyCategorySpend() {
     try {
       const res = await axios.get(
-        `http://localhost:8080/chartData/${currentUserID}/${selectedYear}/getYearlyCategorySpend`
+        `${process.env.HOST}/chartData/${currentUserID}/${selectedYear}/getYearlyCategorySpend`
       );
       const dataArr = res.data;
       for (const category in data) {
