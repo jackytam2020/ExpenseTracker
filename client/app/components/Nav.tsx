@@ -20,7 +20,6 @@ export default function Nav() {
 
   const handleLogout = () => {
     dispatch(setLogout());
-    console.log(currentUserID);
   };
   return (
     <nav className={currentUserID ? NavStyles.nav : NavStyles.navHidden}>
