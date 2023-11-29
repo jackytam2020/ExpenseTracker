@@ -18,7 +18,7 @@ import {
   PURGE,
   REGISTER,
 } from 'redux-persist';
-import sessionStorage from 'redux-persist/lib/storage/session';
+import localStorage from 'redux-persist/lib/storage/session';
 import { PersistGate } from 'redux-persist/integration/react';
 
 // export const metadata: Metadata = {
@@ -29,7 +29,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 const persistConfig = {
   timeout: 100,
   key: 'root',
-  storage: sessionStorage,
+  storage: localStorage,
   version: 1,
 };
 const persistedReducer = persistReducer(persistConfig, globalReducer);
