@@ -8,6 +8,7 @@ import session from 'express-session';
 
 //exported functions
 import { connectDB } from './config/database.ts';
+import User from './models/Users';
 
 //route imports
 import entryRoutes from './routes/entries.ts';
@@ -28,7 +29,6 @@ app.use(
 dotenv.config({ path: path.resolve(__dirname, './.env') });
 
 app.set('trust proxy', 1);
-app.enable('trust proxy');
 
 // setting up express session
 app.use(

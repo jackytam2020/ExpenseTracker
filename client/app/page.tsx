@@ -8,21 +8,21 @@ import { useRouter } from 'next/navigation';
 export default function Login() {
   const router = useRouter();
 
-  // async function loginCallback() {
-  //   try {
-  //     const res = await axios.get(`${process.env.HOST}/auth/profile`, {
-  //       withCredentials: true,
-  //     });
+  async function loginCallback() {
+    try {
+      const res = await axios.get(`${process.env.HOST}/auth/profile`, {
+        withCredentials: true,
+      });
 
-  //     if (res.data) {
-  //       router.push('/home');
-  //     }
-  //   } catch (error) {}
-  // }
+      if (res.data) {
+        router.push('/home');
+      }
+    } catch (error) {}
+  }
 
-  // useEffect(() => {
-  //   loginCallback();
-  // }, []);
+  useEffect(() => {
+    loginCallback();
+  }, []);
   return (
     <div className={loginStyles.login}>
       <div className={loginStyles.login__container}>
